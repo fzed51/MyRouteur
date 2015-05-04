@@ -44,15 +44,24 @@ class Routeur {
 	}
 
 	static private function match(Route $route, Requete $requete) {
+		if (!in_array($requete->client['METHODE'], $route->getMethodes())) {
+			return false;
+		}
+		if (preg_match($route->getRegEx(), $requete->client['URI'], $params)) {
 
+		}
+		return false;
 	}
 
 	static function reparti(Requete $requete) {
 		var_dump(static::$_routes);
 		var_dump($requete);
 		foreach (static::$_routes as $route) {
-			self::match($route, $requete);
+			if (self::match($route, $requete)) {
+				return $route;
+			}
 		}
+		return NULL;
 	}
 
 }
