@@ -22,12 +22,10 @@ class Requete {
 	}
 
 	private function initServeurData() {
-		var_dump($_SERVER);
-		var_dump($_ENV);
+		// TODO : Init la partie serveur de la requete
 	}
 
 	private function initClientData() {
-		var_dump($_REQUEST);
 		$this->client['IP'] = $_SERVER['REMOTE_ADDR'];
 		$this->client['PORT'] = $_SERVER['REMOTE_PORT'];
 		$this->client['METHODE'] = $_SERVER['REQUEST_METHOD'];
@@ -36,21 +34,23 @@ class Requete {
 				$this->client['METHODE'] = $_POST['_METHODE'];
 			}
 		}
-		$this->client['URI'] = $_SERVER['REQUEST_URI'];
+		$this->client['URI'] = first(explode('?', $_SERVER['REQUEST_URI']));
+		$this->client['ACCEPT'] = $_SERVER['HTTP_ACCEPT'];
+		$this->client['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+		$this->client['ACCEPT_ENCODING'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
+		$this->client['ACCEPT_LANGUAGE'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		//$this->client[''] = $_SERVER[''];
 	}
 
 	private function initInputData() {
-		var_dump($_GET);
-		var_dump($_POST);
-		var_dump($_COOKIE);
 		if (isset($_GET)) {
 			$this->input = array_merge($this->input, $_GET);
 		}
-		if (isset($_POST)) {
-			$this->input = array_merge($this->input, $_POST);
-		}
 		if (isset($_COOKIE)) {
 			$this->input = array_merge($this->input, $_COOKIE);
+		}
+		if (isset($_POST)) {
+			$this->input = array_merge($this->input, $_POST);
 		}
 	}
 
