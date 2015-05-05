@@ -16,4 +16,4 @@ nbproject/
 
 ### Composer ###
 # ----------
-/vendor
+vendor/
