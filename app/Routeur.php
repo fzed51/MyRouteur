@@ -47,6 +47,7 @@ class Routeur {
 		if (!in_array($requete->client['METHODE'], $route->getMethodes())) {
 			return false;
 		}
+		var_dump($route->getRegEx());
 		if (preg_match($route->getRegEx(), $requete->client['URI'], $params)) {
 
 		}
