@@ -8,12 +8,17 @@
 
 namespace App;
 
+use ArrayObject;
+use Exception;
+
 /**
  * Description of Route
  *
  * @author fabien.sanchez
  */
 class Route {
+
+	const METHODES = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'];
 
 	private $_action;
 	private $_type_action;
@@ -44,11 +49,15 @@ class Route {
 		if (is_array($methode)) {
 			$this->_methodes = $methode;
 		} elseif (is_string($methode)) {
-			$this->_methodes = explode(['|', ' ', ';'], $methode);
+			if ($methode === "*") {
+				$this->_methodes = self::METHODES;
+			} else {
+				$this->_methodes = explode('|', preg_replace("`\s*[ .,;\/-]\s*`", "|", $methode));
+			}
 		} else {
-			throw new \Exception("La méthode n'est pas reconnue");
+			throw new Exception("La méthode n'est pas reconnue");
 		}
-		$this->_methodes = array_intersect($this->_methodes, ['GET', 'POST', 'PUT', 'DELETE']);
+		$this->_methodes = array_intersect($this->_methodes, self::METHODES);
 	}
 
 	private function setAction($action) {
@@ -59,15 +68,24 @@ class Route {
 			$this->_type_action = "CONTROL_ACTION";
 			$this->_action = $action;
 		} else {
-			throw new \Exception("L'action n'est pas reconnue");
+			throw new Exception("L'action n'est pas reconnue");
 		}
 	}
 
-	function getMethodes() {
+	public function getMethodes() {
 		return $this->_methodes;
 	}
 
-	function executeAction(\ArrayObject $Parametres) {
+	public function getRegEx() {
+		$parametres = $this->getParametresName();
+	}
+
+	private function getParametresName() {
+		$matchs = array();
+		preg_match_all("`\{(\w)\}`", $this->_path, $matchs);
+	}
+
+	function executeAction(ArrayObject $Parametres) {
 		switch ($this->_type_action) {
 			case 'CALLABLE':
 
