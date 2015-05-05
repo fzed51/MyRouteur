@@ -25,10 +25,18 @@ class Route {
 	private $_path;
 	private $_methodes;
 	private $_name;
+	private $_validation;
 
+	/**
+	 * Spécifie une nouvelle route
+	 * @param string|array $methode
+	 * @param string $path
+	 * @param string|callable $action
+	 */
 	public function __construct($methode, $path, $action) {
 		$this->setMethodes($methode);
 		$this->_path = $path;
+		$this->generateValidation();
 		$this->setAction($action);
 	}
 
@@ -83,6 +91,7 @@ class Route {
 	private function getParametresName() {
 		$matchs = array();
 		preg_match_all("`\{(\w)\}`", $this->_path, $matchs);
+		return $matchs[1];
 	}
 
 	function executeAction(ArrayObject $Parametres) {
@@ -94,6 +103,23 @@ class Route {
 
 				break;
 		}
+	}
+
+	private function generateValidation() {
+		$params = $this->getParametresName();
+		foreach ($params as $param) {
+			$this->setValidation($param, '.+');
+		}
+	}
+
+	public function setValidations(ArrayObject $validations) {
+		foreach ($validations as $param => $validation) {
+			$this->setValidation($param, $validation);
+		}
+	}
+
+	public function setValidation($param, $validation) {
+		$this->_validation[$param] = $validation;
 	}
 
 }
