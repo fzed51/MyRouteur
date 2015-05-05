@@ -34,7 +34,9 @@ class Requete {
 				$this->client['METHODE'] = $_POST['_METHODE'];
 			}
 		}
-		$this->client['URI'] = first(explode('?', $_SERVER['REQUEST_URI']));
+		$uri = explode('?', $_SERVER['REQUEST_URI']);
+		$this->client['URI'] = array_shift($uri);
+		unset($uri);
 		$this->client['ACCEPT'] = $_SERVER['HTTP_ACCEPT'];
 		$this->client['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 		$this->client['ACCEPT_ENCODING'] = $_SERVER['HTTP_ACCEPT_ENCODING'];

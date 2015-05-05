@@ -40,6 +40,11 @@ class Route {
 		$this->setAction($action);
 	}
 
+	/**
+	 * Ajoute un nom
+	 * @param string $name
+	 * @return Route
+	 */
 	public function setName($name) {
 		$this->_name = $name;
 		return $this;
@@ -53,6 +58,11 @@ class Route {
 		return $this->_path;
 	}
 
+	/**
+	 * initialise les méthodes
+	 * @param array|string $methode peut être '*'
+	 * @throws Exception
+	 */
 	private function setMethodes($methode) {
 		if (is_array($methode)) {
 			$this->_methodes = $methode;
@@ -99,7 +109,10 @@ class Route {
 		return $matchs[1];
 	}
 
-	function executeAction(ArrayObject $Parametres) {
+	function executeAction(array $parametres = []) {
+		var_dump($parametres);
+		$this->sanitizParametres($parametres);
+		var_dump($parametres);
 		switch ($this->_type_action) {
 			case 'CALLABLE':
 
@@ -118,6 +131,11 @@ class Route {
 		}
 	}
 
+	/**
+	 * ajoute plusieur validations
+	 * @param ArrayObject $validations tableau de prametre => regex de validation
+	 * @return Route
+	 */
 	public function setValidations(ArrayObject $validations) {
 		foreach ($validations as $param => $validation) {
 			$this->setValidation($param, $validation);
@@ -125,9 +143,30 @@ class Route {
 		return $this;
 	}
 
+	/**
+	 * ajoute une validation
+	 * @param string $param nom du paramètre
+	 * @param string $validation regex de validation
+	 * @return Route
+	 */
 	public function setValidation($param, $validation) {
 		$this->_validation[$param] = $validation;
 		return $this;
+	}
+
+	/**
+	 * netoye les paramètres pour qu'il correspondent à la requète
+	 * @param array $parametres
+	 */
+	private function sanitizParametres(array &$parametres) {
+		$tempArray = [];
+		$params = $this->getParametresName();
+		foreach ($params as $param) {
+			if (isset($parametres[$param])) {
+				array_push($tempArray, $parametres[$param]);
+			}
+		}
+		$parametres = $tempArray;
 	}
 
 }

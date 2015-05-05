@@ -35,7 +35,7 @@ class Routeur {
 
 	static function getUrl($routeName, ArrayObject $parametres = NULL) {
 		$route = self::getRoute($routeName);
-		$fullPath = 'localhost' . '/' . $route->getPath();
+		$fullPath = 'localhost' . '/MyRouteur/' . $route->getPath();
 		if (!is_null($parametres)) {
 			foreach ($parametres as $parametre => $value) {
 				$fullPath = str_replace($fullPath, '{' . $parametre . '}', $value);
@@ -47,17 +47,16 @@ class Routeur {
 		if (!in_array($requete->client['METHODE'], $route->getMethodes())) {
 			return false;
 		}
-		var_dump($route->getRegEx());
+		$params = [];
 		if (preg_match($route->getRegEx(), $requete->client['URI'], $params)) {
-
+			return $route->executeAction($params);
 		}
 		return false;
 	}
 
 	static function reparti(Requete $requete) {
-		var_dump(static::$_routes);
-		var_dump($requete);
 		foreach (static::$_routes as $route) {
+			echo "test " . $route->getPath() . " et " . $requete->client['URI'] . '<br>' . PHP_EOL;
 			if (self::match($route, $requete)) {
 				return $route;
 			}
