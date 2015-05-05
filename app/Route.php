@@ -122,10 +122,12 @@ class Route {
 		foreach ($validations as $param => $validation) {
 			$this->setValidation($param, $validation);
 		}
+		return $this;
 	}
 
 	public function setValidation($param, $validation) {
 		$this->_validation[$param] = $validation;
+		return $this;
 	}
 
 }
