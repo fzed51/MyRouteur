@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace App\Controleir;
+namespace App\Controleur;
 
 /**
  * Description of Controleur
@@ -14,9 +14,5 @@ namespace App\Controleir;
  * @author fabien.sanchez
  */
 class Controleur {
-
-	public function __call($action, $arguments) {
-
-	}
 
 }
