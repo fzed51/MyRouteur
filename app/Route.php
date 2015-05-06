@@ -35,7 +35,7 @@ class Route {
 	 */
 	public function __construct($methode, $path, $action) {
 		$this->setMethodes($methode);
-		$this->_path = $path;
+		$this->_path = WEBROOT . $path;
 		$this->generateValidation();
 		$this->setAction($action);
 	}
@@ -83,7 +83,7 @@ class Route {
 		if (is_callable($action)) {
 			$this->_type_action = "CALLABLE";
 			$this->_action = $action;
-		} elseif (is_string($action)) {
+		} elseif (is_string($action) && preg_match("`([a-zA-Z][a-zA-Z0-9_]*)@([a-zA-Z][a-zA-Z0-9_]*)`", $action)) {
 			$this->_type_action = "CONTROL_ACTION";
 			$this->_action = $action;
 		} else {
@@ -119,7 +119,8 @@ class Route {
 
 				break;
 			case 'CONTROL_ACTION':
-
+				preg_match("`([a-zA-Z][a-zA-Z0-9_]*)@([a-zA-Z][a-zA-Z0-9_]*)`", $this->_action, $matchs);
+				debug_zval_dump($matchs);
 				break;
 		}
 	}

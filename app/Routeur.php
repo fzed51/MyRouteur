@@ -48,7 +48,7 @@ class Routeur {
 			return false;
 		}
 		$params = [];
-		if (preg_match($route->getRegEx(), $requete->client['URI'], $params)) {
+		if (preg_match($route->getRegEx(), str_replace('index.php', '', $requete->client['URI']), $params)) {
 			return $route->executeAction($params);
 		}
 		return false;
@@ -57,8 +57,9 @@ class Routeur {
 	static function reparti(Requete $requete) {
 		foreach (static::$_routes as $route) {
 			echo "test " . $route->getPath() . " et " . $requete->client['URI'] . '<br>' . PHP_EOL;
-			if (self::match($route, $requete)) {
-				return $route;
+			$reponse = self::match($route, $requete);
+			if ($reponse !== false) {
+				return $reponse;
 			}
 		}
 		return NULL;
