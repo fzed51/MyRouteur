@@ -101,7 +101,7 @@ class Route {
 		foreach ($parametres as $parametre) {
 			$regex = str_replace(preg_quote('{' . $parametre . '}', '`'), '(?P<' . $parametre . '>' . $this->_validation[$parametre] . ')', $regex);
 		}
-		return '`' . $regex . '`U';
+		return '`' . $regex . '$`U';
 	}
 
 	private function getParametresName() {
@@ -111,17 +111,12 @@ class Route {
 	}
 
 	function executeAction(array $parametres = []) {
-		var_dump($parametres);
 		$this->sanitizParametres($parametres);
-		var_dump($parametres);
 		switch ($this->_type_action) {
 			case 'CALLABLE':
-
-				break;
+				return $this->executeCallable($parametres);
 			case 'CONTROL_ACTION':
-				preg_match("`([a-zA-Z][a-zA-Z0-9_]*)@([a-zA-Z][a-zA-Z0-9_]*)`", $this->_action, $matchs);
-				debug_zval_dump($matchs);
-				break;
+				return $this->executeControleurAction($parametres);
 		}
 	}
 
@@ -165,10 +160,35 @@ class Route {
 		$params = $this->getParametresName();
 		foreach ($params as $param) {
 			if (isset($parametres[$param])) {
-				array_push($tempArray, $parametres[$param]);
+				$tempArray[$param] = $parametres[$param];
 			}
 		}
 		$parametres = $tempArray;
+	}
+
+	private function executeControleurAction(array $parametres = []) {
+		$matchs = [];
+		preg_match("`([a-zA-Z][a-zA-Z0-9_]*)@([a-zA-Z][a-zA-Z0-9_]*)`", $this->_action, $matchs);
+		$ctrlNom = 'App\Controleur\controleur' . $matchs[1];
+		$actnNom = $matchs[2];
+		if (class_exists($ctrlNom, true)) {
+			//echo "Exécute $ctrlNom->$actnNom()";
+			$controleur = new $ctrlNom();
+			$listeMethode = get_class_methods($controleur);
+			if (array_search($actnNom, $listeMethode) !== false) {
+				$refMethode = new \ReflectionMethod($controleur, $actnNom);
+				var_dump($refMethode->getParameters());
+			}
+		}
+	}
+
+	private function executeCallable(array $parametres = []) {
+		$refCallable = new \ReflectionFunction($this->_action);
+		if (count($refCallable->getParameters()) > 0) {
+			call_user_func($this->_action, $parametres);
+		} else {
+			call_user_func($this->_action);
+		}
 	}
 
 }

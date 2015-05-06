@@ -21,8 +21,9 @@ $requete = new Requete();
 
 Routeur::add((new Route('GET', '', function() {
 	Echo "index<br>" .
-	"<a href=\"" . Routeur::getUrl('bonjour', ['name' => 'Fabien']) . "\">bonjour Fabien</a>" .
-	"<a href=\"" . Routeur::getUrl('user_do', ['action' => 'update', 'id' => 95]) . "\">bonjour Fabien</a>";
+	"<a href=\"" . Routeur::getUrl('bonjour', ['name' => 'Fabien']) . "\">bonjour Fabien</a><br>" .
+	"<a href=\"" . Routeur::getUrl('user_do', ['action' => 'edit', 'id' => 95]) . "\">Edition de l'utilisateur n°95</a><br>" .
+	"<a href=\"" . Routeur::getUrl('contact') . "\">contactez moi</a><br>";
 }))->setName('home'));
 
 Routeur::add((new Route('GET', 'helo/{name}', function($name) {
@@ -38,7 +39,7 @@ Routeur::add(
 				->setValidation('action', 'delete|edit')
 );
 
-Routeur::add((new Route('GET', 'contact', 'Page@Contact'))->setName('contact'));
+Routeur::add((new Route('GET', 'contact', 'Page@about'))->setName('contact'));
 
 Routeur::reparti($requete);
 

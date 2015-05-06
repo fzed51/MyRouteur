@@ -33,14 +33,15 @@ class Routeur {
 		throw new Exception("la route : " . $routeName . " n'existe pas !");
 	}
 
-	static function getUrl($routeName, ArrayObject $parametres = NULL) {
+	static function getUrl($routeName, array $parametres = NULL) {
 		$route = self::getRoute($routeName);
-		$fullPath = 'localhost' . '/MyRouteur/' . $route->getPath();
+		$fullPath = $route->getPath();
 		if (!is_null($parametres)) {
 			foreach ($parametres as $parametre => $value) {
-				$fullPath = str_replace($fullPath, '{' . $parametre . '}', $value);
+				$fullPath = str_replace('{' . $parametre . '}', $value, $fullPath);
 			}
 		}
+		return $fullPath;
 	}
 
 	static private function match(Route $route, Requete $requete) {
@@ -56,7 +57,7 @@ class Routeur {
 
 	static function reparti(Requete $requete) {
 		foreach (static::$_routes as $route) {
-			echo "test " . $route->getPath() . " et " . $requete->client['URI'] . '<br>' . PHP_EOL;
+			// echo "test " . $route->getPath() . " et " . $requete->client['URI'] . '<br>' . PHP_EOL;
 			$reponse = self::match($route, $requete);
 			if ($reponse !== false) {
 				return $reponse;
