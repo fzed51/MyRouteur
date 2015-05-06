@@ -3,12 +3,12 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 
 	RewriteEngine On
-	RewriteBase /
+	RewriteBase /MyRouteur/
 
 	# Force to exclude the trailing slash
-	# RewriteCond %{REQUEST_FILENAME} !-d
-	# RewriteCond %{REQUEST_URI} (.*)/$
-	# RewriteRule ^(.+)/$ $1 [R=307,L]
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)/$
+	RewriteRule ^(.+)/$ $1 [R=307,L]
 
 	# Allow any files or directories that exist to be displayed directly
 	RewriteCond %{REQUEST_FILENAME} !-f
