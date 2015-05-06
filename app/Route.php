@@ -10,6 +10,8 @@ namespace App;
 
 use ArrayObject;
 use Exception;
+use ReflectionFunction;
+use ReflectionMethod;
 
 /**
  * Description of Route
@@ -169,26 +171,51 @@ class Route {
 	private function executeControleurAction(array $parametres = []) {
 		$matchs = [];
 		preg_match("`([a-zA-Z][a-zA-Z0-9_]*)@([a-zA-Z][a-zA-Z0-9_]*)`", $this->_action, $matchs);
-		$ctrlNom = 'App\Controleur\controleur' . $matchs[1];
+		$ctrlNom = "App\Controleur\controleur{$matchs[1]}";
 		$actnNom = $matchs[2];
 		if (class_exists($ctrlNom, true)) {
 			//echo "Exécute $ctrlNom->$actnNom()";
 			$controleur = new $ctrlNom();
 			$listeMethode = get_class_methods($controleur);
 			if (array_search($actnNom, $listeMethode) !== false) {
-				$refMethode = new \ReflectionMethod($controleur, $actnNom);
-				var_dump($refMethode->getParameters());
+				$refMethode = new ReflectionMethod($controleur, $actnNom);
+				if ($refMethode->getNumberOfParameters() > 0) {
+					$refParametres = $refMethode->getParameters();
+					$parametresIndexes = self::indexArrayFor($parametres, $refParametres);
+					return $refMethode->invokeArgs($parametresIndexes);
+				} else {
+					return $refMethode->invoke();
+				}
 			}
 		}
 	}
 
 	private function executeCallable(array $parametres = []) {
-		$refCallable = new \ReflectionFunction($this->_action);
-		if (count($refCallable->getParameters()) > 0) {
-			call_user_func($this->_action, $parametres);
+		$refCallable = new ReflectionFunction($this->_action);
+		if ($refCallable->getNumberOfParameters() > 0) {
+			$refParametres = $refCallable->getParameters();
+			$parametresIndexes = self::indexArrayFor($parametres, $refParametres);
+			return $refCallable->invokeArgs($parametresIndexes);
 		} else {
-			call_user_func($this->_action);
+			return $refCallable->invoke();
 		}
+	}
+
+	static private function indexArrayFor(array $arrayAsso, array $paramModel) {
+		$parametresIndexes = [];
+		foreach ($paramModel as $refParam) {
+			if (isset($arrayAsso[$refParam->getName()])) {
+				$parametresIndexes[$refParam->getPosition()] = $arrayAsso[$refParam->getName()];
+			} else {
+				if (!$refParam->isOptional()) {
+					$parametresIndexes[$refParam->getPosition()] = $refParam->getDefaultValue();
+				} else {
+					$name = ($this->_name <> '') ? $this->_name : $this->_path;
+					throw new Exception("Imposible d'executer la route {$name}, il manque le paramètre {$refParam->getName()}.");
+				}
+			}
+		}
+		return $parametresIndexes;
 	}
 
 }
