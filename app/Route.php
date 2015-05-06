@@ -182,9 +182,9 @@ class Route {
 				if ($refMethode->getNumberOfParameters() > 0) {
 					$refParametres = $refMethode->getParameters();
 					$parametresIndexes = self::indexArrayFor($parametres, $refParametres);
-					return $refMethode->invokeArgs($parametresIndexes);
+					return $refMethode->invokeArgs($controleur, $parametresIndexes);
 				} else {
-					return $refMethode->invoke();
+					return $refMethode->invoke($controleur);
 				}
 			}
 		}
