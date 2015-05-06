@@ -18,7 +18,7 @@ use Exception;
  */
 class Route {
 
-	const METHODES = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'];
+	const METHODES = "GET|POST|PATCH|PUT|DELETE";
 
 	private $_action;
 	private $_type_action;
@@ -64,18 +64,19 @@ class Route {
 	 * @throws Exception
 	 */
 	private function setMethodes($methode) {
+		$liste_methodes = explode('|', self::METHODES);
 		if (is_array($methode)) {
 			$this->_methodes = $methode;
 		} elseif (is_string($methode)) {
 			if ($methode === "*") {
-				$this->_methodes = self::METHODES;
+				$this->_methodes = $liste_methodes;
 			} else {
 				$this->_methodes = explode('|', preg_replace("`\s*[ .,;\/-]\s*`", "|", $methode));
 			}
 		} else {
 			throw new Exception("La méthode n'est pas reconnue");
 		}
-		$this->_methodes = array_intersect($this->_methodes, self::METHODES);
+		$this->_methodes = array_intersect($this->_methodes, $liste_methodes);
 	}
 
 	private function setAction($action) {
