@@ -27,5 +27,7 @@ Routeur::add(
 				->setValidation('action', 'delete|edit')
 );
 
+Routeur::add((new Route('GET', 'conctact', 'PageControleur@Contact'))->setName('contact'));
+
 Routeur::reparti($requete);
 
