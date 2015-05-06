@@ -7,9 +7,10 @@ use App\Routeur;
 define('DS', DIRECTORY_SEPARATOR);
 define('WS', '/');
 define('ROOT', __DIR__ . DS);
-$tabUrl = explode(basename(ROOT), filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL));
+$dir = basename(ROOT);
+$tabUrl = explode($dir, $_SERVER['REQUEST_URI']);
 if (count($tabUrl) > 1) {
-	define('WEBROOT', $tabUrl[0] . basename(ROOT) . WS);
+	define('WEBROOT', $tabUrl[0] . $dir . WS);
 } else {
 	define('WEBROOT', WS);
 }
@@ -37,7 +38,7 @@ Routeur::add(
 				->setValidation('action', 'delete|edit')
 );
 
-Routeur::add((new Route('GET', 'conctact', 'PageControleur@Contact'))->setName('contact'));
+Routeur::add((new Route('GET', 'contact', 'Page@Contact'))->setName('contact'));
 
 Routeur::reparti($requete);
 
