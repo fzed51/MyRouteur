@@ -35,7 +35,7 @@ Routeur::add(
 			Echo "l'utilisateur n°$id fait $action<br><a href=\"" . Routeur::getUrl('home') . "\">Home</a>";
 		}))
 				->setName('user_do')
-				->setValidation('id', '[0-9]')
+				->setValidation('id', '[0-9]+')
 				->setValidation('action', 'delete|edit')
 );
 
