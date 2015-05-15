@@ -1,16 +1,16 @@
 {
-	"name": "vendor/my-routeur",
-	"description": "Description of project MyRouteur.",
-	"authors": [
-		{
-			"name": "fabien.sanchez",
-			"email": "your@email.here"
-		}
-	],
-	"autoload": {
-		"psr-4": {
-			"App\\": "app/"
-		}
-	},
-	"require": {}
+    "name": "fzed51/my-routeur",
+    "description": "Routeur PHP simple. Il est autonome un maximum pour eviter les dépendances.",
+    "authors": [
+        {
+            "name": "fabien.sanchez",
+            "email": "your@email.here"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {}
 }
