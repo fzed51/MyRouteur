@@ -1,7 +1,11 @@
 <?php
 
 use App\Requete;
+<<<<<<< HEAD
 use App\Routeur\Routeur;
+=======
+use App\Routeur;
+>>>>>>> origin/dev
 
 define('DS', DIRECTORY_SEPARATOR);
 define('WS', '/');
