@@ -10,6 +10,10 @@ $RECYCLE.BIN/
 *.msp
 *.lnk
 
+### NotePad++ ###
+# -------------
+nppBackup/
+
 ### NetBeans ###
 # ------------
 nbproject/
