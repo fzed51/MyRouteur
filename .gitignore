@@ -21,3 +21,10 @@ nbproject/
 ### Composer ###
 # ----------
 vendor/
+
+### Projet ###
+# ----------
+*.log
+*.log.txt
+*.cache
+*.cache.txt
