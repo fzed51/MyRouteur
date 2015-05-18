@@ -1,11 +1,7 @@
 <?php
 
 use App\Requete;
-<<<<<<< HEAD
 use App\Routeur\Routeur;
-=======
-use App\Routeur;
->>>>>>> origin/dev
 
 define('DS', DIRECTORY_SEPARATOR);
 define('WS', '/');
@@ -34,7 +30,7 @@ Routeur::get('helo/{name}', function($name) {
 }, 'bonjour');
 
 Routeur::get('user/{action}/{id}', function($id, $action) {
-    Echo "l'utilisateur nÂ°$id fait $action<br><a href=\"" . Routeur::getUrl('home') . "\">Home</a>";
+    Echo "l'utilisateur n° $id fait $action<br><a href=\"" . Routeur::getUrl('home') . "\">Home</a>";
 }, 'user_do')->setValidation('id', '[0-9]+')->setValidation('action', 'delete|edit');
 
 Routeur::get('contact', 'ControleurPage@about', 'contact');
