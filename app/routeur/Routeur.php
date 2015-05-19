@@ -1,5 +1,29 @@
 <?php
 
+/*
+ * The MIT License
+ *
+ * Copyright 2015 fabien.sanchez.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 namespace App\Routeur;
 
 /**
@@ -11,8 +35,8 @@ class Routeur {
 
     const METHODES = "GET|POST|PATCH|PUT|DELETE";
 
-    private static $route_by_methode = array();
-    private static $route_by_name = array();
+    private static $routes_by_methode = array();
+    private static $routes_by_name = array();
 
     public static function get($path, $action, $name = null) {
         return self::add('GET', $path, $action, $name);
@@ -48,17 +72,17 @@ class Routeur {
         // enregistrement de la route dans le tableau des méthoes
         $lst_methodes = explode('|', $methodes);
         foreach ($lst_methodes as $methode) {
-            if (!array_key_exists($methode, self::$route_by_methode)) {
-                self::$route_by_methode[$methode] = array();
+            if (!array_key_exists($methode, self::$routes_by_methode)) {
+                self::$routes_by_methode[$methode] = array();
             }
-            array_push(self::$route_by_methode[$methode], $route);
+            array_push(self::$routes_by_methode[$methode], $route);
         }
         // enregistrement de la route dans le tableau de nom
         if (!is_null($name)) {
-            self::$route_by_name[$name] = $route;
+            self::$routes_by_name[$name] = $route;
         } else {
             if (is_string($action)) {
-                self::$route_by_name[$action] = $route;
+                self::$routes_by_name[$action] = $route;
             }
         }
         return $route;
@@ -76,7 +100,7 @@ class Routeur {
         }
     }
 
-    private static function mapMethode($controleurNom, ReflectionMethod $defMethode) {
+    private static function mapMethode($controleurNom, \ReflectionMethod $defMethode) {
         $name = $defMethode->getName();
         $regex = "/^((?:_?(?:get|put|post|patch|delete))+)_(.+)$/";
         $matchs = array();
@@ -87,38 +111,61 @@ class Routeur {
         }
     }
 
-    private function mapAction($controleurNom, array $methodes, $actionNom, array $parametres) {
+    private static function mapAction($controleurNom, array $methodes, $actionNom, array $parametres) {
         $routeNom = $controleurNom . '.' . $actionNom;
         $action = $controleurNom . '@' . $actionNom;
         $routeBasePath = $controleurNom . WS . $actionNom;
         $routeParametre = '';
-        foreach ($prametres as $parametre) {
-            $paramNom = $parametre->getNom();
+        foreach ($parametres as $parametre) {
+            $paramNom = $parametre->getName();
             $routeParametre .= WS . '{' . $paramNom . '}';
         }
-        static::add(implode('|', $methodes), $routeBasePath . $routeParametre, $action, $routeNom);
+        static::add(strtoupper(implode('|', $methodes)), $routeBasePath . $routeParametre, $action, $routeNom);
     }
 
     public static function getUrl($routeName, array $parametres = []) {
-        if (!array_key_exists($routeName, self::$route_by_name)) {
+        if (!array_key_exists($routeName, self::$routes_by_name)) {
             throw new RouteurException("La route '{$routeName}' n'est pas connue");
         }
-        return self::$route_by_name[$routeName]->getUrl($parametres);
+        return self::$routes_by_name[$routeName]->getUrl($parametres);
     }
 
     public static function reparti($methode, $uri) {
         if (preg_match('`^' . self::METHODES . '$`', $methode) == 0) {
             throw new RouteurException("La méthode '{$methode}' est inconnue !");
         }
-        if (!array_key_exists($methode, self::$route_by_methode)) {
+        if (!array_key_exists($methode, self::$routes_by_methode)) {
             throw new RouteNotFoundException();
         }
-        foreach (self::$route_by_methode[$methode] as $route) {
+        foreach (self::$routes_by_methode[$methode] as $route) {
             if ($route->match($uri)) {
                 return $route->call();
             }
         }
         throw new RouteNotFoundException();
+    }
+
+    public static function listRoutes() {
+        $infosRoutes = array();
+        foreach (self::$routes_by_methode as $methode => $routes) {
+            foreach ($routes as $route) {
+                $infos = $route->getInfos();
+                $infos['methodes'] = $methode;
+                $infos['nom'] = '';
+                $chemin = $infos['chemin'];
+                if (!isset($infosRoutes[$chemin])) {
+                    $infosRoutes[$chemin] = $infos;
+                } else {
+                    $infosRoutes[$chemin]['methodes'] .= ', ' . $methode;
+                }
+            }
+        }
+        foreach (self::$routes_by_name as $nom => $route) {
+            $infos = $route->getInfos();
+            $chemin = $infos['chemin'];
+            $infosRoutes[$chemin]['nom'] = $nom;
+        }
+        return array_values($infosRoutes);
     }
 
 }
