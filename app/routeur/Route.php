@@ -210,4 +210,12 @@ class Route {
         return $parametresIndexes;
     }
 
+    public function getInfos() {
+        return [
+            'chemin' => $this->Path,
+            'parametres' => implode(', ', $this->Parametres),
+            'action' => (is_callable($this->Action) ? 'Callable' : $this->Action),
+        ];
+    }
+
 }
