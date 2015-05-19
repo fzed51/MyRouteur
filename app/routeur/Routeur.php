@@ -64,6 +64,41 @@ class Routeur {
         return $route;
     }
 
+    public static function mapControleur($controleurNom) {
+        if (!class_exists($controleurNom, true)) {
+            throw new RouteurException("Le controleur '{$controleurNom}' n'est pas connu !");
+        }
+        $defControleur = new \ReflectionClass($controleurNom);
+        $ctrlNomElem = explode('\\', $controleurNom);
+        $controleurNomCourt = array_pop($ctrlNomElem);
+        foreach ($defControleur->getMethods(\ReflectionMethod::IS_PUBLIC) as $defMethode) {
+            static::mapMethode($controleurNomCourt, $defMethode);
+        }
+    }
+
+    private static function mapMethode($controleurNom, ReflectionMethod $defMethode) {
+        $name = $defMethode->getName();
+        $regex = "/^((?:_?(?:get|put|post|patch|delete))+)_(.+)$/";
+        $matchs = array();
+        if (preg_match($regex, $name, $matchs) > 0) {
+            $methodes = explode('_', $matchs[1]);
+            $actionNom = $matchs[2];
+            static::mapAction($controleurNom, $methodes, $actionNom, $defMethode->getParameters());
+        }
+    }
+
+    private function mapAction($controleurNom, array $methodes, $actionNom, array $parametres) {
+        $routeNom = $controleurNom . '.' . $actionNom;
+        $action = $controleurNom . '@' . $actionNom;
+        $routeBasePath = $controleurNom . WS . $actionNom;
+        $routeParametre = '';
+        foreach ($prametres as $parametre) {
+            $paramNom = $parametre->getNom();
+            $routeParametre .= WS . '{' . $paramNom . '}';
+        }
+        static::add(implode('|', $methodes), $routeBasePath . $routeParametre, $action, $routeNom);
+    }
+
     public static function getUrl($routeName, array $parametres = []) {
         if (!array_key_exists($routeName, self::$route_by_name)) {
             throw new RouteurException("La route '{$routeName}' n'est pas connue");
