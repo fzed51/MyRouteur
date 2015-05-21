@@ -33,65 +33,65 @@ namespace App\Database;
  */
 class Db extends \PDO {
 
-	private static $instance = null;
-	protected $fileData = __DIR__ . "db.sqlite";
+    private static $instance = null;
+    protected $fileData = __DIR__ . "db.sqlite";
 
-	private function __construct() {
-		parent::__construct('sqlite:' . $this->fileData);
-	}
+    private function __construct() {
+        parent::__construct('sqlite:' . $this->fileData);
+    }
 
-	public static function getInstance() {
-		if (is_null(static::$instance)) {
-			$classeName = get_called_class();
-			static::$instance = new $classeName();
-		}
-		return static::$instance;
-	}
+    public static function getInstance() {
+        if (is_null(static::$instance)) {
+            $classeName = get_called_class();
+            static::$instance = new $classeName();
+        }
+        return static::$instance;
+    }
 
-	public static function getAllTable($tableName) {
-		$cnx = static::getInstance();
-		$stmt = $cnx->query("SELECT * FROM $tableName");
-		return $stmt->fetchAll(PDO::FETCH_CLASS);
-	}
+    public static function getAllTable($tableName) {
+        $cnx = static::getInstance();
+        $stmt = $cnx->query("SELECT * FROM $tableName");
+        return $stmt->fetchAll(PDO::FETCH_CLASS);
+    }
 
-	public static function getIdTable($tableName, $id) {
-		$cnx = static::getInstance();
-		$stmt = $cnx->query("SELECT * FROM $tableName WHERE `id` = $id");
-		return $stmt->fetchAll(PDO::FETCH_CLASS);
-	}
+    public static function getIdTable($tableName, $id) {
+        $cnx = static::getInstance();
+        $stmt = $cnx->query("SELECT * FROM $tableName WHERE `id` = $id");
+        return $stmt->fetchAll(PDO::FETCH_CLASS);
+    }
 
-	public static function insertInTable($tableName, array $datas) {
-		$cnx = static::getInstance();
-		$fields = [];
-		$values = [];
-		$params = [];
-		foreach ($datas as $f => $v) {
-			if ($f == 'id') {
-				continue;
-			}
-			array_push($fields, '`' . $f . '`');
-			array_push($params, '?');
-			array_push($values, $v);
-		}
+    public static function insertInTable($tableName, array $datas) {
+        $cnx = static::getInstance();
+        $fields = [];
+        $values = [];
+        $params = [];
+        foreach ($datas as $f => $v) {
+            if ($f == 'id') {
+                continue;
+            }
+            array_push($fields, '`' . $f . '`');
+            array_push($params, '?');
+            array_push($values, $v);
+        }
 
-		$stmt = $cnx->prepare("INSERT INTO $tableName (" . implode(',', $f) . ") VALUES (" . implode(',', $params) . ")");
-		$stmt->execut($values);
-	}
+        $stmt = $cnx->prepare("INSERT INTO $tableName (" . implode(',', $f) . ") VALUES (" . implode(',', $params) . ")");
+        $stmt->execut($values);
+    }
 
-	public static function updateTable($table, $id, array $datas) {
-		$cnx = static::getInstance();
-		$fields = [];
-		$values = [];
-		foreach ($datas as $f => $v) {
-			if ($f == 'id') {
-				continue;
-			}
-			array_push($fields, '`' . $f . '` = ?');
-			array_push($values, $v);
-		}
+    public static function updateTable($table, $id, array $datas) {
+        $cnx = static::getInstance();
+        $fields = [];
+        $values = [];
+        foreach ($datas as $f => $v) {
+            if ($f == 'id') {
+                continue;
+            }
+            array_push($fields, '`' . $f . '` = ?');
+            array_push($values, $v);
+        }
 
-		$stmt = $cnx->prepare("UPDATE $tableName SET " . implode(',', $f) . " WHERE `id` = $id");
-		$stmt->execut($values);
-	}
+        $stmt = $cnx->prepare("UPDATE $tableName SET " . implode(',', $f) . " WHERE `id` = $id");
+        $stmt->execut($values);
+    }
 
 }
