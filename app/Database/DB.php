@@ -62,9 +62,9 @@ class Db extends \PDO {
 
 	public static function insertInTable($tableName, array $datas) {
 		$cnx = static::getInstance();
-		$fields = [];
-		$values = [];
-		$params = [];
+		$ds = [];
+		$es = [];
+		$ms = [];
 		foreach ($datas as $f => $v) {
 			if ($f == 'id') {
 				continue;
