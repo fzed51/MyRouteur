@@ -12,46 +12,48 @@ use App\Routeur\Routeur;
  */
 class News {
 
-    function get_All() {
-        $news = Db::getAllTable('NEWS');
-        $content = "";
-        foreach ($news as $nex) {
-            $content .= "<h2>{$new->titre}</h2>" . PHP_EOL;
-            $content .= "<p>{$new->text}</p><nr/>" . PHP_EOL;
-        }
-        $page = "<html>"
-                . "<head><titre>News</titre></head>"
-                . "<body>"
-                . "<h1>News</h1>"
-                . "<a href=\"" . Routeur::getUrl('home') . "\">home</a>"
-                . $content
-                . "</body>"
-                . "</html>";
-        echo $page;
-    }
+	private $page = "<html>"
+		. "<head><titre>News - {titre}</titre></head>"
+		. "<body>"
+		. "<h1>News</h1>"
+		. "{content}"
+		. "</body>"
+		. "</html>";
 
-    function get_New() {
+	function get_All() {
+		$news = Db::getAllTable('NEWS');
+		$content = "<a href=\"" . Routeur::getUrl('home') . "\">Home</a>" . PHP_EOL;
+		foreach ($news as $new) {
+			$content .= "<h2>{$new->titre}</h2>" . PHP_EOL;
+			$content .= "<p>{$new->text}</p><nr/>" . PHP_EOL;
+		}
+		$page = str_replace('{titre}', 'tout', $this->page);
+		$page = str_replace('{content}', $content, $page);
+		echo $page;
+	}
 
-    }
+	function get_New() {
 
-    function get_One($id) {
+	}
 
-    }
+	function get_One($id) {
 
-    function get_Update($id) {
+	}
 
-    }
+	function get_Update($id) {
 
-    private function editNew($id = -1, $titre = '', $text = '') {
+	}
 
-    }
+	private function editNew($id = -1, $titre = '', $text = '') {
 
-    function post_New($id = -1) {
+	}
 
-    }
+	function post_New($id = -1) {
 
-    function delete_New($id) {
+	}
 
-    }
+	function delete_New($id) {
+
+	}
 
 }
