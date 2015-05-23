@@ -20,6 +20,8 @@ nbproject/
 
 ### Composer ###
 # ----------
+composer.bat
+composer/
 vendor/
 
 ### Projet ###
