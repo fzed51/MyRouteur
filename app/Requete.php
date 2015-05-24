@@ -102,8 +102,11 @@ class Requete {
 
     static private function returnVal($arrayName, $param) {
         $requete = self::getInstance();
-        if (isset($requete->$arrayName[$param])) {
-            return $requete->$arrayName[$param];
+        if (isset($requete->$arrayName)) {
+            $array = $requete->$arrayName;
+            if (isset($array[$param])) {
+                return $array[$param];
+            }
         }
     }
 
