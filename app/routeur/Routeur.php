@@ -107,20 +107,20 @@ class Routeur {
         if (preg_match($regex, $name, $matchs) > 0) {
             $methodes = explode('_', $matchs[1]);
             $actionNom = $matchs[2];
-            static::mapAction($controleurNom, $methodes, $actionNom, $defMethode->getParameters());
-        } elseif ($name == 'index'){
-			static::mapAction($controleurNom, ['GET'], 'index', $defMethode->getParameters());
-		}
+            static::mapAction($controleurNom, $name, $methodes, $actionNom, $defMethode->getParameters());
+        } elseif ($name == 'index') {
+            static::mapAction($controleurNom, 'index', ['GET'], 'index', $defMethode->getParameters());
+        }
     }
 
-    private static function mapAction($controleurNom, array $methodes, $actionNom, array $parametres) {
+    private static function mapAction($controleurNom, $methodeNom, array $methodes, $actionNom, array $parametres) {
         $routeNom = $controleurNom . '.' . $actionNom;
-        $action = $controleurNom . '@' . $actionNom;
-		if($actionNom != 'index'){
-			$routeBasePath = $controleurNom . WS . $actionNom;
-		} else {
-			$routeBasePath = $controleurNom ;
-		}
+        $action = $controleurNom . '@' . $methodeNom;
+        if ($actionNom != 'index') {
+            $routeBasePath = $controleurNom . WS . $actionNom;
+        } else {
+            $routeBasePath = $controleurNom;
+        }
         $routeParametre = '';
         foreach ($parametres as $parametre) {
             $paramNom = $parametre->getName();
