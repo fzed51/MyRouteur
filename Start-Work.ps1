@@ -6,18 +6,21 @@ if ($LASTEXITCODE -ne 1){
 	ssh-add.exe $(resolve-path "~/.ssh/github_rsa")
 }
 
-if (-not $(test-path ./composer.bat)){
-"@echo Off
-php ./composer/composer.phar %*
-" | set-content ./composer.bat
+if (@(Get-Command composer).count -eq 0){
+	if (-not $(test-path ./composer.bat)){
+	"@echo Off
+	php ./composer/composer.phar %*
+	" | set-content ./composer.bat
+	}
+	if (-not $(test-path ./composer/composer.phar)){
+		md composer
+		cd composer
+		php -r "readfile('https://getcomposer.org/installer');" | php
+		cd ..
+	}
 }
-if (-not $(test-path ./composer/composer.phar)){
-	md composer
-	cd composer
-	php -r "readfile('https://getcomposer.org/installer');" | php
-	cd ..
-}
-
 .\Clear-Project.ps1
 
 git pull
+composer selfupdate
+composer update
