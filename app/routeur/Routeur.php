@@ -108,13 +108,19 @@ class Routeur {
             $methodes = explode('_', $matchs[1]);
             $actionNom = $matchs[2];
             static::mapAction($controleurNom, $methodes, $actionNom, $defMethode->getParameters());
-        }
+        } elseif ($name == 'index'){
+			static::mapAction($controleurNom, ['GET'], 'index', $defMethode->getParameters());
+		}
     }
 
     private static function mapAction($controleurNom, array $methodes, $actionNom, array $parametres) {
         $routeNom = $controleurNom . '.' . $actionNom;
         $action = $controleurNom . '@' . $actionNom;
-        $routeBasePath = $controleurNom . WS . $actionNom;
+		if($actionNom != 'index'){
+			$routeBasePath = $controleurNom . WS . $actionNom;
+		} else {
+			$routeBasePath = $controleurNom ;
+		}
         $routeParametre = '';
         foreach ($parametres as $parametre) {
             $paramNom = $parametre->getName();

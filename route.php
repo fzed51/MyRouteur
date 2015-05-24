@@ -3,16 +3,23 @@
 use App\Routeur\Routeur;
 
 Routeur::get('/', function() {
-    Echo "index<br>" .
+    Echo "<h1>index</h1><br>" .
     "<a href=\"" . Routeur::getUrl('bonjour', ['name' => 'Fabien']) . "\">bonjour Fabien</a><br>" .
     "<a href=\"" . Routeur::getUrl('user_do', ['action' => 'edit', 'id' => 95]) . "\">Edition de l'utilisateur n°95</a><br>" .
     "<a href=\"" . Routeur::getUrl('liste_route') . "\">liste des routes</a><br>" .
+    "<a href=\"" . Routeur::getUrl('phpinfo') . "\">phpinfo</a><br>" .
+    "<a href=\"" . Routeur::getUrl('News.index') . "\">les news</a><br>" .
     "<a href=\"" . Routeur::getUrl('contact') . "\">contactez moi</a><br>";
 }, 'home');
 
 Routeur::get('helo/{name}', function($name) {
     Echo "bonjour $name<br><a href=\"" . Routeur::getUrl('home') . "\">Home</a>";
 }, 'bonjour');
+Routeur::get('info', function() {
+    Echo "<h1>phpInfo</h1><br><a href=\"" . Routeur::getUrl('home') . "\">Home</a><br>";
+    phpinfo();
+    echo "<a href=\"" . Routeur::getUrl('home') . "\">Home</a><br>";
+}, 'phpinfo');
 
 Routeur::get('user/{action}/{id}', function($id, $action) {
     Echo "l'utilisateur n° $id fait $action<br><a href=\"" . Routeur::getUrl('home') . "\">Home</a>";

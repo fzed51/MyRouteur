@@ -31,19 +31,14 @@ namespace App\Database;
  *
  * @author fabien.sanchez
  */
-class Db extends \PDO {
+class Db {
 
     private static $instance = null;
-    protected $fileData = __DIR__ . "db.sqlite";
-
-    private function __construct() {
-        parent::__construct('sqlite:' . $this->fileData);
-    }
+    protected static $fileData = __DIR__ . "\\db.sqlite";
 
     public static function getInstance() {
         if (is_null(static::$instance)) {
-            $classeName = get_called_class();
-            static::$instance = new $classeName();
+            static::$instance = new \PDO('sqlite:' . static::$fileData);
         }
         return static::$instance;
     }
@@ -59,7 +54,6 @@ class Db extends \PDO {
         $stmt = $cnx->query("SELECT * FROM $tableName WHERE `id` = $id");
         return $stmt->fetchAll(PDO::FETCH_CLASS);
     }
-
 
     public static function insertInTable($tableName, array $datas) {
         $cnx = static::getInstance();
