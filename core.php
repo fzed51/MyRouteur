@@ -15,6 +15,7 @@ if (count($tabUrl) > 1) {
 }
 
 require './vendor/autoload.php';
+require './app/tools.php';
 
 $requete = new Requete();
 
