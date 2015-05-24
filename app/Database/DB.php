@@ -46,13 +46,18 @@ class Db {
     public static function getAllTable($tableName) {
         $cnx = static::getInstance();
         $stmt = $cnx->query("SELECT * FROM $tableName");
-        return $stmt->fetchAll(PDO::FETCH_CLASS);
+        return $stmt->fetchAll(\PDO::FETCH_CLASS);
     }
 
     public static function getIdTable($tableName, $id) {
         $cnx = static::getInstance();
         $stmt = $cnx->query("SELECT * FROM $tableName WHERE `id` = $id");
-        return $stmt->fetchAll(PDO::FETCH_CLASS);
+        $repons = $stmt->fetchAll(\PDO::FETCH_CLASS);
+        if ($reponse === false) {
+            return [];
+        } else {
+            return $reponse;
+        }
     }
 
     public static function insertInTable($tableName, array $datas) {
