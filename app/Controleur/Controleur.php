@@ -32,7 +32,7 @@ namespace App\Controleur;
  * @author fabien.sanchez
  */
 abstract class Controleur {
-    
+
     abstract public function index();
-    
+
 }

@@ -62,19 +62,19 @@ class News extends Controleur {
     }
 
     function get_Read($id) {
-        
+
     }
 
     function get_post_Update($id) {
-        
+
     }
 
     function post_delete() {
-        
+
     }
 
     private function editNew($id = -1, $titre = '', $text = '') {
-        
+
     }
 
 }
