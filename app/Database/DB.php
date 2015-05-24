@@ -69,13 +69,16 @@ class Db {
             if ($f == 'id') {
                 continue;
             }
-            array_push($fields, '`' . $f . '`');
+            array_push($fields, $f);
             array_push($params, '?');
             array_push($values, $v);
         }
-
-        $stmt = $cnx->prepare("INSERT INTO $tableName (" . implode(',', $f) . ") VALUES (" . implode(',', $params) . ")");
-        $stmt->execut($values);
+        $requete = "INSERT INTO $tableName (" . implode(',', $fields) . ") VALUES (" . implode(',', $params) . ")";
+        // echo "<!-- \n";
+        // var_dump($_POST);
+        // echo $requete . "\n-->";
+        $stmt = $cnx->prepare($requete);
+        $stmt->execute($values);
     }
 
     public static function updateTable($table, $id, array $datas) {
