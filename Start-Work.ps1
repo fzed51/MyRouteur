@@ -1,7 +1,7 @@
 Write-Host $("ssh.exe -t git@github.com")
 ssh.exe -T git@github.com
 
-if (-not $?){
+if ($LASTEXITCODE -ne 1){
     Write-Host $("ssh-add.exe " + $(resolve-path "~/.ssh/github_rsa"))
 	ssh-add.exe $(resolve-path "~/.ssh/github_rsa")
 }
