@@ -11,5 +11,5 @@ if(-not $test){
 } else {
 &"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" "127.0.0.2:8765/test.php"
 
-    php -S 127.0.0.2:8765 -t "$webRoot" -e -n
+    php -S 127.0.0.2:8765 -t "$webRoot"
 }    
