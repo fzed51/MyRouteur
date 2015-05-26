@@ -176,4 +176,8 @@ class Routeur {
         return array_values($infosRoutes);
     }
 
+    public static function debug($param) {
+        var_dump(static::$routes);
+    }
+
 }

@@ -1,7 +1,5 @@
 <?php
 
-use App\Routeur\Routeur;
-
 Routeur::get('/', function() {
     Echo "<h1>index</h1><br>" .
     "<a href=\"" . Routeur::getUrl('bonjour', ['name' => 'Fabien']) . "\">bonjour Fabien</a><br>" .
@@ -44,7 +42,7 @@ Routeur::get('liste_routes', function() {
         echo "</tr>";
     }
     echo"</table>";
-    //print_r(Routeur::listRoutes());
+    Routeur::debug('');
     echo PHP_EOL . "</pre>";
 }, 'liste_route');
 
