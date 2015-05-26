@@ -31,97 +31,280 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class Vue {
+class Vue implements VueInterface {
 
-    private static $_style;
-    private static $_style_cache = [];
-    private static $_nav;
-    private static $_content;
-    private static $_content_cache = [];
-    private static $_script;
-    private static $_script_cache = [];
+    /**
+     * Dossier où se trouve les vue
+     * @static
+     * @var string
+     */
+    static $DossierVue = __DIR__ . '\..\..';
 
-    public static function addStyle($style) {
+    /**
+     * Dossier où se trouve les layout
+     * @static
+     * @var string
+     */
+    static $DossierLayout = __DIR__ . '\..\..';
+
+    /* Liste des données fixe */
+
+    /**
+     * titre de la vue
+     * @var string
+     */
+    protected $titre;
+
+    /**
+     * fichier contenant le modele de la vue
+     * @var string
+     */
+    protected $layout;
+
+    /**
+     * fichier contenant la vue
+     * @var string
+     */
+    protected $vue;
+
+    /**
+     * tableau contenant les style de la vue
+     * @var array
+     */
+    protected $style = [];
+
+    /**
+     *
+     * @var string
+     */
+    protected $content;
+
+    /**
+     *
+     * @var array
+     */
+    protected $script = [];
+
+    /*  Donnée dynamiques */
+
+    /**
+     *
+     * @var array
+     */
+    protected $data = [];
+
+    /**
+     *
+     * @param string $vue
+     * @param string $layout
+     */
+    public function __construct($vue = null, $layout = null) {
+        if (!is_null($vue)) {
+            $this->setVue($vue);
+            if (!is_null($layout) && is_string($layout)) {
+                $this->setLayout($layout);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param string $vue
+     * @param array $data
+     * @param string $layout
+     * @return \App\Vue\Vue
+     */
+    public static function get($vue, array $data = array(), $layout = null) {
+        return new self($vue, $data, $layout);
+    }
+
+    /**
+     * Modifie ou retourne le titre de la vue
+     * @param string $titre titre donné à la vue
+     * @return \App\Vue\Vue|string
+     */
+    public function titre($titre = null) {
+        if (is_null($titre)) {
+            return $titre;
+        }
+        $this->titre = $titre;
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $slug
+     * @return \App\Vue\Vue
+     * @throws VueException
+     */
+    public function setLayout($slug) {
+        $fileName = self::$DossierLayout . "\\" . str_replace('.', "\\", $slug) . '.php';
+        if (!file_exists($fileName)) {
+            throw new VueException("Le layout '$slug' n'a pas été trouvé");
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $slug
+     * @return \App\Vue\Vue
+     * @throws VueException
+     */
+    public function setVue($slug) {
+        $fileName = self::$DossierVue . "\\" . str_replace('.', "\\", $slug) . '.php';
+        if (!file_exists($fileName)) {
+            throw new VueException("La vue '$slug' n'a pas été trouvée");
+        }
+        return $this;
+    }
+
+    public function addStyle($style) {
         $key = md5($style);
-        if (!isset(self::$_style_cache[$key])) {
-            self::$_style_cache[$key] = true;
-            self::$_style .= '<style>' . $style . '</style>';
-        }
+        $this->style[$key] = '<style>' . $style . '</style>';
+        return $this;
     }
 
-    public static function addFileStyle($file_style) {
+    public function addFileStyle($file_style) {
         $key = md5($file_style);
-        if (!isset(self::$_style_cache[$key])) {
-            self::$_style_cache[$key] = true;
-            $file_style = concatPath('./style', $file_style);
-            if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file_style)) {
-                self::$_style .= '<link type="text/css" href="' . $file_style . '" rel="stylesheet" />';
-            }
+        $file_style = concatPath('./style', $file_style);
+        if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file_style)) {
+            $this->style[$key] = '<link type="text/css" href="' . $file_style . '" rel="stylesheet" />';
         }
+        return $this;
     }
 
-    public static function style() {
-        return self::$_style;
+    public function style() {
+        return $this->style;
     }
 
-    public static function setNav($nav) {
-        self::$_nav = $nav;
+    public function prependContent($content) {
+        $this->content = $content . $this->content;
+        return $this;
     }
 
-    public static function nav() {
-        return self::$_nav;
+    public function setContent($content) {
+        $this->content = $content;
+        return $this;
     }
 
-    public static function prependContent($content) {
-        $key = md5($content);
-        if (!isset(self::$_content_cache[$key])) {
-            self::$_content_cache[$key] = true;
-            self::$_content = $content . self::$_content;
-        }
+    public function appendContent($content) {
+        $this->content .= $content;
+        return $this;
     }
 
-    public static function setContent($content) {
-        $key = md5($content);
-        if (!isset(self::$_content_cache[$key])) {
-            self::$_content_cache = [];
-            self::$_content_cache[$key] = true;
-            self::$_content = $content;
-        }
+    public function content() {
+        return $this->content;
     }
 
-    public static function appendContent($content) {
-        $key = md5($content);
-        if (!isset(self::$_content_cache[$key])) {
-            self::$_content_cache[$key] = true;
-            self::$_content .= $content;
-        }
-    }
-
-    public static function content() {
-        return self::$_content;
-    }
-
-    public static function addScript($script) {
+    public function addScript($script) {
         $key = md5($script);
-        if (!isset(self::$_script_cache[$key])) {
-            self::$_script_cache[$key] = true;
-            self::$_script .= '<script type="text/javascript" >' . $script . '</style>';
+        $this->script[$key] = '<script type="text/javascript" >' . $script . '</style>';
+        return $this;
+    }
+
+    public function addFileScript($file_script) {
+        $key = md5($file_script);
+        $file_script = concatPath('./style', $file_script);
+        if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file_script)) {
+            $this->script[$key] = '<script type="text/javascript" src="' . $file_script . '"></style>';
+        }
+        return $this;
+    }
+
+    public function script() {
+        return $this->script;
+    }
+
+    public function addData($data, $value) {
+        $this->data[$data] = $value;
+        return $this;
+    }
+
+    public function addDatas(array $datas) {
+        foreach ($datas as $data => $value) {
+            $this->addData($data, $value);
+        }
+        return $this;
+    }
+
+    public function data() {
+        return $this->data;
+    }
+
+    private function compileDataArray(array $data) {
+        return implode("\n", $data);
+    }
+
+    final public function __toString() {
+        return $this->render();
+    }
+
+    private static function renderString($__string, array $__data) {
+        extract($__data);
+        unset($__data);
+        $contents = eval($__string);
+        return $contents;
+    }
+
+    private static function renderFile($__file, array $__data) {
+        extract($__data);
+        unset($__data);
+        ob_start();
+        include $__file;
+        $contents = ob_get_contents();
+        ob_end_clean();
+        return $contents;
+    }
+
+    public function render($data = null) {
+        if (!is_null($data)) {
+            $compiledData = array_merge($this->data, $data);
+        } else {
+            $compiledData = $this->data;
+        }
+        $this->extractMeta($compiledData);
+        if (count($this->script) > 0 || !isset($data['script'])) {
+            $compiledData['script'] = $this->compileDataArray($this->script);
+        }
+        if (count($this->style) > 0 || !isset($data['style'])) {
+            $compiledData['style'] = $this->compileDataArray($this->style);
+        }
+        if (!empty($this->titre) || !isset($data['titre'])) {
+            $compiledData['titre'] = $this->titre;
+        }
+        if ($this->vue == '') {
+            if (!empty($this->content)) {
+                $content = $this->content;
+            } else {
+                $content = $compiledData['content'];
+                unset($compiledData['content']);
+            }
+            return renderString($content, $compiledData);
+        } else {
+            $compiledData['content'] = self::renderFile($this->vue, $compiledData);
+            if ($this->layout != '') {
+                $compiledData['content'] = self::renderFile($this->layout, $compiledData);
+            }
+            return $compiledData['content'];
         }
     }
 
-    public static function addFileScript($file_script) {
-        $key = md5($file_script);
-        if (!isset(self::$_script_cache[$key])) {
-            self::$_script_cache[$key] = true;
-            $file_script = concatPath('./style', $file_script);
-            if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file_script)) {
-                self::$_script .= '<script type="text/javascript" src="' . $file_script . '"></style>';
+    private function extractMeta(array $compiledData) {
+        foreach ($compiledData as $data) {
+            if (is_object($data) && is_a($data, 'Vue')) {
+                $this->extractScript($data);
+                $this->extractStyle($data);
             }
         }
     }
 
-    public static function script() {
-        return self::$_script;
+    public function extractScript(Vue $data) {
+        $this->script = array_merge($this->script, $data->script());
+    }
+
+    public function extractStyle(Vue $data) {
+        $this->style = array_merge($this->style, $data->style());
     }
 
 }
