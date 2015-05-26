@@ -1,8 +1,5 @@
 <?php
 
-use App\Requete;
-use App\Routeur\Routeur;
-
 define('DS', DIRECTORY_SEPARATOR);
 define('WS', '/');
 define('ROOT', __DIR__ . DS);
@@ -15,6 +12,7 @@ if (count($tabUrl) > 1) {
 }
 
 require './vendor/autoload.php';
+require './alias.php';
 require './app/tools.php';
 
 $requete = new Requete();
