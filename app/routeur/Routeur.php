@@ -37,6 +37,7 @@ class Routeur {
 
     private static $routes_by_methode = array();
     private static $routes_by_name = array();
+    private static $routes = array();
 
     public static function get($path, $action, $name = null) {
         return self::add('GET', $path, $action, $name);
@@ -69,6 +70,7 @@ class Routeur {
         }
         // création de la route
         $route = new Route($path, $action);
+        array_push(self::$routes, $route);
         // enregistrement de la route dans le tableau des méthoes
         $lst_methodes = explode('|', $methodes);
         foreach ($lst_methodes as $methode) {
