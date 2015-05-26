@@ -2,8 +2,6 @@
 
 namespace App\Controleur;
 
-use App\Routeur\Routeur;
-
 /**
  * Description of controleurPage
  *
@@ -11,7 +9,7 @@ use App\Routeur\Routeur;
  */
 class ControleurPage extends Controleur {
 
-    function index(){
+    function index() {
         $this->about();
     }
 
