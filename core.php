@@ -12,11 +12,12 @@ if (count($tabUrl) > 1) {
 }
 
 require './vendor/autoload.php';
-require './alias.php';
-require './app/tools.php';
+require './tools.php';
+
+include_if_exist('./app/alias.php');
 
 $requete = new Requete();
 
-require './route.php';
+include_if_exist('./app/route.php');
 
 Routeur::reparti($requete->client['METHODE'], $requete->client['URI']);
