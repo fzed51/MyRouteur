@@ -25,7 +25,7 @@
  */
 
 $config_alias = array(
-    'Requete' => 'App\Requete',
+    'Requete' => 'App\IO\Requete',
     'Routeur' => 'App\Routeur\Routeur',
     'Db' => 'App\Database\Db'
 );

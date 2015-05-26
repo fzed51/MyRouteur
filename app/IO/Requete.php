@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace App;
+namespace App\IO;
 
 /**
  * Description of Requete
