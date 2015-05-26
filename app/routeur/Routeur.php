@@ -88,7 +88,7 @@ class Routeur {
         return $route;
     }
 
-    public static function mapControleur($controleurNom) {
+    public static function mapControleur($path, $controleurNom) {
         if (!class_exists($controleurNom, true)) {
             throw new RouteurException("Le controleur '{$controleurNom}' n'est pas connu !");
         }
@@ -96,30 +96,30 @@ class Routeur {
         $ctrlNomElem = explode('\\', $controleurNom);
         $controleurNomCourt = array_pop($ctrlNomElem);
         foreach ($defControleur->getMethods(\ReflectionMethod::IS_PUBLIC) as $defMethode) {
-            static::mapMethode($controleurNomCourt, $defMethode);
+            static::mapMethode($path, $controleurNomCourt, $defMethode);
         }
     }
 
-    private static function mapMethode($controleurNom, \ReflectionMethod $defMethode) {
+    private static function mapMethode($path, $controleurNom, \ReflectionMethod $defMethode) {
         $name = $defMethode->getName();
         $regex = "/^((?:_?(?:get|put|post|patch|delete))+)_(.+)$/";
         $matchs = array();
         if (preg_match($regex, $name, $matchs) > 0) {
             $methodes = explode('_', $matchs[1]);
             $actionNom = $matchs[2];
-            static::mapAction($controleurNom, $name, $methodes, $actionNom, $defMethode->getParameters());
+            static::mapAction($path, $controleurNom, $name, $methodes, $actionNom, $defMethode->getParameters());
         } elseif ($name == 'index') {
-            static::mapAction($controleurNom, 'index', ['GET'], 'index', $defMethode->getParameters());
+            static::mapAction($path, $controleurNom, 'index', ['GET'], 'index', $defMethode->getParameters());
         }
     }
 
-    private static function mapAction($controleurNom, $methodeNom, array $methodes, $actionNom, array $parametres) {
+    private static function mapAction($path, $controleurNom, $methodeNom, array $methodes, $actionNom, array $parametres) {
         $routeNom = $controleurNom . '.' . $actionNom;
         $action = $controleurNom . '@' . $methodeNom;
         if ($actionNom != 'index') {
-            $routeBasePath = $controleurNom . WS . $actionNom;
+            $routeBasePath = $path . WS . $actionNom;
         } else {
-            $routeBasePath = $controleurNom;
+            $routeBasePath = $path;
         }
         $routeParametre = '';
         foreach ($parametres as $parametre) {

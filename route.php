@@ -48,6 +48,6 @@ Routeur::get('liste_routes', function() {
     echo PHP_EOL . "</pre>";
 }, 'liste_route');
 
-Routeur::mapControleur('App\Controleur\News');
+Routeur::mapControleur('post', 'App\Controleur\News');
 
 Routeur::get('contact', 'ControleurPage@about', 'contact');
