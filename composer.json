@@ -1,10 +1,11 @@
 {
     "name": "fzed51/my-routeur",
     "description": "Routeur PHP simple. Il est autonome un maximum pour eviter les dépendances.",
+    "license": "MIT",
     "authors": [
         {
             "name": "fabien.sanchez",
-            "email": "your@email.here"
+            "email": "fzed51@yahoo.fr"
         }
     ],
     "autoload": {
@@ -12,5 +13,7 @@
             "App\\": "app/"
         }
     },
-    "require": {}
+    "require": {
+		"php": ">=5.6.0"
+	}
 }
