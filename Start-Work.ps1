@@ -19,9 +19,10 @@ if (@(Get-Command composer -ErrorAction SilentlyContinue).count -eq 0){
 		php -r "readfile('https://getcomposer.org/installer');" | php
 		cd ..
 	}
+	New-Alias -Name composer -Value $((Resolve-Path './composer.bat').Path)
 }
 .\Clear-Project.ps1
 
 git pull
-&$composer selfupdate
-&$composer update
+composer selfupdate
+composer update
