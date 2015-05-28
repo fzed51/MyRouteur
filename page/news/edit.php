@@ -1,3 +1,7 @@
+<?php
+if (isset($new)) {
+    $new_titre =}
+?>
 <h1>Nouvelle news?</h1>
 <a href="<?= Routeur::getUrl('News.index') ?>">&Lt;</a>
 <a href="<?= Routeur::getUrl('home') ?>">Home</a>
