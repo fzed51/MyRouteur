@@ -18,6 +18,11 @@ include_if_exist('./app/alias.php');
 
 $requete = new Requete();
 
+// Parametrage des vues
+\App\Vue\Vue::$DefautLayout = 'defaut';
+\App\Vue\Vue::$DossierLayout = __DIR__ . DS . 'page' . DS . 'layout';
+\App\Vue\Vue::$DossierVue = __DIR__ . DS . 'page';
+
 include_if_exist('./app/route.php');
 
 Routeur::reparti($requete->client['METHODE'], $requete->client['URI']);

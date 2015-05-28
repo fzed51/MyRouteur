@@ -34,6 +34,13 @@ namespace App\Vue;
 class Vue implements VueInterface {
 
     /**
+     * Nom du layout par defaut
+     * @static
+     * @var string
+     */
+    static $DefautLayout = "";
+
+    /**
      * Dossier où se trouve les vue
      * @static
      * @var string
@@ -53,19 +60,25 @@ class Vue implements VueInterface {
      * titre de la vue
      * @var string
      */
-    protected $titre;
+    protected $Titre;
 
     /**
      * fichier contenant le modele de la vue
      * @var string
      */
-    protected $layout;
+    protected $Layout;
 
     /**
      * fichier contenant la vue
      * @var string
      */
     protected $vue;
+
+    /**
+     * tableau contenant les meta de la vue
+     * @var array
+     */
+    protected $Meta = [];
 
     /**
      * tableau contenant les style de la vue
@@ -103,6 +116,8 @@ class Vue implements VueInterface {
             $this->setVue($vue);
             if (!is_null($layout) && is_string($layout)) {
                 $this->setLayout($layout);
+            } else {
+                $this->setLayout(self::$DefautLayout);
             }
         }
     }
@@ -127,7 +142,7 @@ class Vue implements VueInterface {
         if (is_null($titre)) {
             return $titre;
         }
-        $this->titre = $titre;
+        $this->Titre = $titre;
         return $this;
     }
 
@@ -142,6 +157,7 @@ class Vue implements VueInterface {
         if (!file_exists($fileName)) {
             throw new VueException("Le layout '$slug' n'a pas été trouvé");
         }
+        $this->Layout = $fileName;
         return $this;
     }
 
@@ -156,6 +172,10 @@ class Vue implements VueInterface {
         if (!file_exists($fileName)) {
             throw new VueException("La vue '$slug' n'a pas été trouvée");
         }
+        if (empty($this->Titre)) {
+            $this->titre($slug);
+        }
+        $this->vue = $fileName;
         return $this;
     }
 
@@ -168,7 +188,7 @@ class Vue implements VueInterface {
     public function addFileStyle($file_style) {
         $key = md5($file_style);
         $file_style = concatPath('./style', $file_style);
-        if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file_style)) {
+        if (file_exists(self::$DossierVue . DIRECTORY_SEPARATOR . $file_style)) {
             $this->style[$key] = '<link type="text/css" href="' . $file_style . '" rel="stylesheet" />';
         }
         return $this;
@@ -178,17 +198,42 @@ class Vue implements VueInterface {
         return $this->style;
     }
 
+    public function addMeta($name, $value) {
+        $key = md5('name' . $name);
+        $this->Meta[$key] = "<meta name=\"{$name}\" content=\"{$value}\" />";
+        return $this;
+    }
+
+    public function addMetaHttp($name, $value) {
+        $key = md5('http-equiv' . $name);
+        $this->Meta[$key] = "<meta http-equiv=\"{$name}\" content=\"{$value}\" />";
+        return $this;
+    }
+
+    public function meta() {
+        return $this->Meta;
+    }
+
     public function prependContent($content) {
+        if (!empty($this->vue)) {
+            throw new VueException("Impossible de modifier le contenu de la vue '{$this->vue}'");
+        }
         $this->content = $content . $this->content;
         return $this;
     }
 
     public function setContent($content) {
+        if (!empty($this->vue)) {
+            throw new VueException("Impossible de modifier le contenu de la vue '{$this->vue}'");
+        }
         $this->content = $content;
         return $this;
     }
 
     public function appendContent($content) {
+        if (!empty($this->vue)) {
+            throw new VueException("Impossible de modifier le contenu de la vue '{$this->vue}'");
+        }
         $this->content .= $content;
         return $this;
     }
@@ -205,8 +250,8 @@ class Vue implements VueInterface {
 
     public function addFileScript($file_script) {
         $key = md5($file_script);
-        $file_script = concatPath('./style', $file_script);
-        if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file_script)) {
+        $file_script = concatPath('./script', $file_script);
+        if (file_exists(self::$DossierVue . DIRECTORY_SEPARATOR . $file_script)) {
             $this->script[$key] = '<script type="text/javascript" src="' . $file_script . '"></style>';
         }
         return $this;
@@ -263,17 +308,20 @@ class Vue implements VueInterface {
         } else {
             $compiledData = $this->data;
         }
-        $this->extractMeta($compiledData);
+        $this->extractData($compiledData);
+        if (count($this->Meta) > 0 || !isset($data['meta'])) {
+            $compiledData['meta'] = $this->compileDataArray($this->Meta);
+        }
         if (count($this->script) > 0 || !isset($data['script'])) {
             $compiledData['script'] = $this->compileDataArray($this->script);
         }
         if (count($this->style) > 0 || !isset($data['style'])) {
             $compiledData['style'] = $this->compileDataArray($this->style);
         }
-        if (!empty($this->titre) || !isset($data['titre'])) {
-            $compiledData['titre'] = $this->titre;
+        if (!empty($this->Titre) || !isset($data['titre'])) {
+            $compiledData['titre'] = $this->Titre;
         }
-        if ($this->vue == '') {
+        if (empty($this->vue)) {
             if (!empty($this->content)) {
                 $content = $this->content;
             } else {
@@ -283,16 +331,17 @@ class Vue implements VueInterface {
             return renderString($content, $compiledData);
         } else {
             $compiledData['content'] = self::renderFile($this->vue, $compiledData);
-            if ($this->layout != '') {
-                $compiledData['content'] = self::renderFile($this->layout, $compiledData);
+            if ($this->Layout != '') {
+                $compiledData['content'] = self::renderFile($this->Layout, $compiledData);
             }
             return $compiledData['content'];
         }
     }
 
-    private function extractMeta(array $compiledData) {
+    private function extractData(array $compiledData) {
         foreach ($compiledData as $data) {
             if (is_object($data) && is_a($data, 'Vue')) {
+                $this->extractMeta($data);
                 $this->extractScript($data);
                 $this->extractStyle($data);
             }
@@ -301,6 +350,10 @@ class Vue implements VueInterface {
 
     public function extractScript(Vue $data) {
         $this->script = array_merge($this->script, $data->script());
+    }
+
+    public function extractMeta(Vue $data) {
+        $this->Meta = array_merge($this->Meta, $data->meta());
     }
 
     public function extractStyle(Vue $data) {

@@ -27,7 +27,8 @@
 $config_alias = array(
     'Requete' => 'App\IO\Requete',
     'Routeur' => 'App\Routeur\Routeur',
-    'Db' => 'App\Database\Db'
+    'Db' => 'App\Database\Db',
+    'Vue' => 'App\Vue\Vue'
 );
 
 foreach ($config_alias as $alias => $classe) {
