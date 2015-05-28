@@ -51,7 +51,8 @@ class Db {
 
     public static function getIdTable($tableName, $id) {
         $cnx = static::getInstance();
-        $stmt = $cnx->query("SELECT * FROM $tableName WHERE `id` = $id");
+        $stmt = $cnx->prepare("SELECT * FROM $tableName WHERE `id` = ?");
+        $stmt->execut($id);
         $repons = $stmt->fetchAll(\PDO::FETCH_CLASS);
         if ($reponse === false) {
             return [];
@@ -95,6 +96,12 @@ class Db {
 
         $stmt = $cnx->prepare("UPDATE $tableName SET " . implode(',', $f) . " WHERE `id` = $id");
         $stmt->execut($values);
+    }
+
+    public function deleteIdTable($table, $id) {
+        $cnx = static::getInstance();
+        $stmt = $cnx->prepare("DELETE FROM $tableName WHERE `id` = ?");
+        $stmt->execut($id);
     }
 
 }

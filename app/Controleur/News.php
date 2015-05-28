@@ -17,26 +17,7 @@ class News extends Controleur {
     }
 
     function get_Create() {
-        ?>
-        <h1>Nouvelle news?</h1>
-        <a href="<?= Routeur::getUrl('News.index') ?>">&Lt;</a>
-        <a href="<?= Routeur::getUrl('home') ?>">Home</a>
-        <form action="<?= Routeur::getUrl('News.Create'); ?>" method="POST">
-            <input type="hidden" name="_METHODE" value="POST" />
-            <div>
-                <label>
-                    Titre
-                    <input type="text" name="data[titre]" value=""/>
-                </label>
-            </div>
-            <div>
-                <textarea name="data[text]"></textarea>
-            </div>
-            <div>
-                <button type="submit">Ajouter</button>
-            </div>
-        </form>
-        <?php
+        echo (new \Vue('news.edit'))->render();
     }
 
     function post_Create() {
@@ -45,19 +26,29 @@ class News extends Controleur {
     }
 
     function get_Read($id) {
-
+        $new = \Db::getIdTable('NEWS', $id);
+        $vue = new \Vue('news.read');
+        $vue->addData('news', $new);
+        echo $vue->render();
     }
 
-    function get_post_Update($id) {
+    function get_Update($id) {
+        $new = \Db::getIdTable('NEWS', $id);
+        $vue = new \Vue('news.edit');
+        $vue->addData('news', $new);
+        echo $vue->render();
+    }
 
+    function post_Update($id) {
+        \DB::updateTable('NEWS', $id, \Requete::input('data'));
+        $this->index();
     }
 
     function post_delete() {
-
-    }
-
-    private function editNew($id = -1, $titre = '', $text = '') {
-
+        $data = \Requete::input('data');
+        if (isset($data['id'])) {
+            $id = $data['id'];
+        }
     }
 
 }
