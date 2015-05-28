@@ -9,21 +9,11 @@ namespace App\Controleur;
  */
 class News extends Controleur {
 
-    private $page = "<html> <head><titre>News - {titre}</titre></head> <body> <h1>News</h1> {content} </body> </html>";
-
     public function index() {
         $news = \Db::getAllTable('news');
-        $content = "<a href=\"" . \Routeur::getUrl('home') . "\">Home</a>" . PHP_EOL;
-        foreach ($news as $new) {
-            $content .= "<h2>{$new->titre}</h2>" . PHP_EOL;
-            $content .= "<p>{$new->text}</p><hr/>" . PHP_EOL;
-        }
-        $content .= "<a href=\"" . \Routeur::getUrl('News.Create') . "\">+</a>" . PHP_EOL;
-        $page = str_replace(
-            '{content}', $content, str_replace(
-                '{titre}', 'tout', $this->page)
-        );
-        echo $page;
+        $vue = new \Vue('news.index');
+        $vue->addData('news', $news);
+        echo $vue->render();
     }
 
     function get_Create() {
