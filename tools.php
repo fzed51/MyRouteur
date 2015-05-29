@@ -18,3 +18,12 @@ if (!function_exists('include_if_exist')) {
     }
 
 }
+
+if (!function_exists('concatPath')) {
+
+    function concatPath($basePath, $childPath) {
+        $path = $basePath . DS . $childPath;
+        return $path;
+    }
+
+}
