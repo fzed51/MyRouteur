@@ -187,8 +187,9 @@ class Vue implements VueInterface {
 
     public function addFileStyle($file_style) {
         $key = md5($file_style);
-        $file_style = concatPath('./style', $file_style);
-        if (file_exists(self::$DossierVue . DIRECTORY_SEPARATOR . $file_style)) {
+        $web_file_style = \concatPath('/style', $file_style . '.css');
+        $sys_file_style = \concatPath(self::$DossierVue . DIRECTORY_SEPARATOR . 'style', $file_style . '.css');
+        if (file_exists($sys_file_style)) {
             $this->Style[$key] = '<link type="text/css" href="' . $file_style . '" rel="stylesheet" />';
         }
         return $this;
@@ -250,7 +251,7 @@ class Vue implements VueInterface {
 
     public function addFileScript($file_script) {
         $key = md5($file_script);
-        $file_script = concatPath('./script', $file_script);
+        $file_script = concatPath('./script', $file_script . '.js');
         if (file_exists(self::$DossierVue . DIRECTORY_SEPARATOR . $file_script)) {
             $this->Script[$key] = '<script type="text/javascript" src="' . $file_script . '"></style>';
         }
