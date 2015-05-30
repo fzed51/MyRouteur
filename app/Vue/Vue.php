@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class Vue implements VueInterface {
+class Vue implements VueGenericInterface, VueInterface {
 
     /**
      * Nom du layout par defaut
@@ -88,12 +88,6 @@ class Vue implements VueInterface {
 
     /**
      *
-     * @var string
-     */
-    protected $Content;
-
-    /**
-     *
      * @var array
      */
     protected $Script = [];
@@ -127,7 +121,7 @@ class Vue implements VueInterface {
      * @param string $vue
      * @param array $data
      * @param string $layout
-     * @return \App\Vue\Vue
+     * @return Vue
      */
     public static function get($vue, array $data = array(), $layout = null) {
         return new self($vue, $data, $layout);
@@ -136,7 +130,7 @@ class Vue implements VueInterface {
     /**
      * Modifie ou retourne le titre de la vue
      * @param string $titre titre donné à la vue
-     * @return \App\Vue\Vue|string
+     * @return Vue|string
      */
     public function titre($titre = null) {
         if (is_null($titre)) {
@@ -149,7 +143,7 @@ class Vue implements VueInterface {
     /**
      *
      * @param string $slug
-     * @return \App\Vue\Vue
+     * @return Vue
      * @throws VueException
      */
     public function setLayout($slug) {
@@ -164,7 +158,7 @@ class Vue implements VueInterface {
     /**
      *
      * @param string $slug
-     * @return \App\Vue\Vue
+     * @return Vue
      * @throws VueException
      */
     public function setVue($slug) {
@@ -215,34 +209,6 @@ class Vue implements VueInterface {
         return $this->Meta;
     }
 
-    public function prependContent($content) {
-        if (!empty($this->Vue)) {
-            throw new VueException("Impossible de modifier le contenu de la vue '{$this->Vue}'");
-        }
-        $this->Content = $content . $this->Content;
-        return $this;
-    }
-
-    public function setContent($content) {
-        if (!empty($this->Vue)) {
-            throw new VueException("Impossible de modifier le contenu de la vue '{$this->Vue}'");
-        }
-        $this->Content = $content;
-        return $this;
-    }
-
-    public function appendContent($content) {
-        if (!empty($this->Vue)) {
-            throw new VueException("Impossible de modifier le contenu de la vue '{$this->Vue}'");
-        }
-        $this->Content .= $content;
-        return $this;
-    }
-
-    public function content() {
-        return $this->Content;
-    }
-
     public function addScript($script) {
         $key = md5($script);
         $this->Script[$key] = '<script type="text/javascript" >' . $script . '</style>';
@@ -286,14 +252,7 @@ class Vue implements VueInterface {
         return $this->render();
     }
 
-    private static function renderString($__string, array $__data) {
-        extract($__data);
-        unset($__data);
-        $contents = eval($__string);
-        return $contents;
-    }
-
-    private static function renderFile($__file, array $__data) {
+    private function renderFile($__file, array $__data) {
         extract($__data);
         unset($__data);
         ob_start();
