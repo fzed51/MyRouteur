@@ -61,6 +61,6 @@ if (php_sapi_name() == 'cli-server') {
         }
         readfile($fullNamePublic);
     } else {
-        require "./public/index.php";
+        require "./index.php";
     }
 }
