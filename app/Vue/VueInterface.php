@@ -33,9 +33,9 @@ namespace App\Vue;
  */
 class VueInterface {
 
-    public function setTemplate($templateSlug);
+    public function setLayout($templateSlug);
 
-    public function getTemplate();
+    public function getLayout();
 
     public function __set($field, $value);
 

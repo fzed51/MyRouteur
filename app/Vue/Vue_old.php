@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class Vue implements VueGenericInterface, VueInterface {
+class Vue implements VueGenericInterface, VueGenericInterface {
 
     /**
      * Nom du layout par defaut
@@ -117,17 +117,6 @@ class Vue implements VueGenericInterface, VueInterface {
     }
 
     /**
-     *
-     * @param string $vue
-     * @param array $data
-     * @param string $layout
-     * @return Vue
-     */
-    public static function get($vue, array $data = array(), $layout = null) {
-        return new self($vue, $data, $layout);
-    }
-
-    /**
      * Modifie ou retourne le titre de la vue
      * @param string $titre titre donné à la vue
      * @return Vue|string
@@ -153,6 +142,14 @@ class Vue implements VueGenericInterface, VueInterface {
         }
         $this->Layout = $fileName;
         return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getLayout() {
+        return $this->Layout;
     }
 
     /**
@@ -290,9 +287,9 @@ class Vue implements VueGenericInterface, VueInterface {
             }
             $compiledData['content'] = renderString($content, $compiledData);
         } else {
-            $compiledData['content'] = self::renderFile($this->Vue, $compiledData);
+            $compiledData['content'] = $this->renderFile($this->Vue, $compiledData);
             if ($this->Layout != '') {
-                $compiledData['content'] = self::renderFile($this->Layout, $compiledData);
+                $compiledData['content'] = $this->renderFile($this->Layout, $compiledData);
             }
         }
         return $compiledData['content'];
