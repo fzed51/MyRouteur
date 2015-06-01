@@ -33,10 +33,6 @@ namespace App\Vue;
  */
 interface VueInterface {
 
-    public function setLayout($templateSlug);
-
-    public function getLayout();
-
     public function __set($field, $value);
 
     public function __get($field);

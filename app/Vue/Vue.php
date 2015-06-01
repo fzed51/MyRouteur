@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class Vue implements VueGenericInterface, VueInterface {
+class Vue implements VueGenericInterface, VueInterface, VueLayoutInterface, VueHtmlElementInterface {
 
     use TraitVueLayout,
         TraitVueModel,
@@ -121,7 +121,7 @@ class Vue implements VueGenericInterface, VueInterface {
         return $contents;
     }
 
-    public function render($data = []) {
+    public function render(array $data = []) {
         $data = array_merge($this->data, $data);
         $this->content = $this->renderFile($this->getModelFile(), $data);
         if (!empty($this->getLayout())) {

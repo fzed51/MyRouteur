@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 fabien.sanchez.
+ * Copyright 2015 Sandrine.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,19 @@ namespace App\Vue;
 
 /**
  *
- * @author fabien.sanchez
+ * @author Sandrine
  */
-interface VueGenericInterface {
+interface VueHtmlElementInterface {
 
-    public function render(array $data = null);
+    public function addMeta($param);
+
+    public function addMetaHttp($param);
+
+    public function addStyle($param);
+
+    public function addFileStyle($param);
+
+    public function addScript($param);
+
+    public function addFileScript($param);
 }

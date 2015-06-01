@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 fabien.sanchez.
+ * Copyright 2015 Sandrine.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,11 @@ namespace App\Vue;
 
 /**
  *
- * @author fabien.sanchez
+ * @author Sandrine
  */
-interface VueGenericInterface {
+interface VueLayoutInterface {
 
-    public function render(array $data = null);
+    public function setLayout($templateSlug);
+
+    public function getLayout();
 }
