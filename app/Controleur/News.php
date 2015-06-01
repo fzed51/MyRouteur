@@ -13,7 +13,7 @@ class News extends Controleur {
         $news = \Db::getAllTable('news');
         $vue = new \Vue('news.index');
         $vue->addFileStyle('new');
-        $vue->addData('news', $news);
+        $vue->setData('news', $news);
         echo $vue->render();
     }
 
