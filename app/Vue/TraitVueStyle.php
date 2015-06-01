@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Sandrine.
+ * Copyright 2015 fabien.sanchez.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,69 +27,36 @@
 namespace App\Vue;
 
 /**
- * Description of TraitVueLayout
  *
  * @author fabien.sanchez
  */
-trait TraitVueLayout {
+trait TraitVueStyle {
 
-    /**
-     * Nom du layout par defaut
-     * @static
-     * @var string
-     */
-    static $DefautLayout = "";
+    private $Styles = array();
 
-    /**
-     * Dossier où se trouve les layout
-     * @static
-     * @var string
-     */
-    static $DossierLayout = __DIR__ . '\..\..';
-
-    /**
-     * slug du layout
-     * @var string
-     */
-    private $Layout;
-
-    /**
-     * fichier contenant le modele du layout
-     * @var string
-     */
-    private $LayoutFile;
-
-    /**
-     *
-     * @param string $slug
-     * @return Vue
-     * @throws VueException
-     */
-    public function setLayout($slug) {
-        $fileName = self::$DossierLayout . "\\" . str_replace('.', "\\", $slug) . '.php';
-        if (!file_exists($fileName)) {
-            throw new VueException("Le layout '$slug' n'a pas été trouvé");
-        }
-        $this->Layout = $slug;
-        $this->LayoutFile = $fileName;
-
+    public function addStyle($style) {
+        $key = md5($style);
+        $this->Styles[$key] = '<style>' . $style . '</style>';
         return $this;
     }
 
-    /**
-     * retourne le slug du layout
-     * @return string
-     */
-    public function getLayout() {
-        return $this->Layout;
+    public function addFileStyle($fileName) {
+        $key = md5($fileName);
+        $path_file = $fileName . '.css';
+        $web_file = concatPath(WEBROOT . '/style', $path_file, WS);
+        $sys_file = concatPath(ROOT . '/style', $path_file, DS);
+        if (file_exists($sys_file)) {
+            $this->Styles[$key] = '<link type="text/css" href="' . $web_file . '" rel="stylesheet" />';
+        }
+        return $this;
     }
 
-    /**
-     * retourne le fichier du layout
-     * @return string
-     */
-    public function getLayoutFile() {
-        return $this->LayoutFile;
+    public function getStyle() {
+        return $this->Styles;
+    }
+
+    public function renderStyle() {
+        return implode(PHP_EOL, $this->Styles);
     }
 
 }

@@ -31,33 +31,26 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-trait TraitVueLayout {
+trait TraitVueModel {
 
     /**
-     * Nom du layout par defaut
+     * Dossier où se trouve les models de vues
      * @static
      * @var string
      */
-    static $DefautLayout = "";
+    static $DossierModel = __DIR__ . '\..\..';
 
     /**
-     * Dossier où se trouve les layout
-     * @static
+     * slug du model
      * @var string
      */
-    static $DossierLayout = __DIR__ . '\..\..';
+    private $Model;
 
     /**
-     * slug du layout
+     * fichier contenant le model de la vue
      * @var string
      */
-    private $Layout;
-
-    /**
-     * fichier contenant le modele du layout
-     * @var string
-     */
-    private $LayoutFile;
+    private $ModelFile;
 
     /**
      *
@@ -65,13 +58,13 @@ trait TraitVueLayout {
      * @return Vue
      * @throws VueException
      */
-    public function setLayout($slug) {
-        $fileName = self::$DossierLayout . "\\" . str_replace('.', "\\", $slug) . '.php';
+    public function setModel($slug) {
+        $fileName = self::$DossierModel . "\\" . str_replace('.', "\\", $slug) . '.php';
         if (!file_exists($fileName)) {
-            throw new VueException("Le layout '$slug' n'a pas été trouvé");
+            throw new VueException("Le model de la vue '$slug' n'a pas été trouvé");
         }
-        $this->Layout = $slug;
-        $this->LayoutFile = $fileName;
+        $this->Model = $slug;
+        $this->ModelFile = $fileName;
 
         return $this;
     }
@@ -80,16 +73,16 @@ trait TraitVueLayout {
      * retourne le slug du layout
      * @return string
      */
-    public function getLayout() {
-        return $this->Layout;
+    public function getModel() {
+        return $this->Model;
     }
 
     /**
      * retourne le fichier du layout
      * @return string
      */
-    public function getLayoutFile() {
-        return $this->LayoutFile;
+    public function getModelFile() {
+        return $this->ModelFile;
     }
 
 }

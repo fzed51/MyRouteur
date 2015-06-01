@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Sandrine.
+ * Copyright 2015 fabien.sanchez.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,69 +27,32 @@
 namespace App\Vue;
 
 /**
- * Description of TraitVueLayout
  *
  * @author fabien.sanchez
  */
-trait TraitVueLayout {
+trait TraitVueTitre {
 
     /**
-     * Nom du layout par defaut
-     * @static
+     * titre de la vue
      * @var string
      */
-    static $DefautLayout = "";
+    private $Titre;
 
     /**
-     * Dossier où se trouve les layout
-     * @static
-     * @var string
+     * Modifie ou retourne le titre de la vue
+     * @param string $titre titre donné à la vue
+     * @return Vue|string
      */
-    static $DossierLayout = __DIR__ . '\..\..';
-
-    /**
-     * slug du layout
-     * @var string
-     */
-    private $Layout;
-
-    /**
-     * fichier contenant le modele du layout
-     * @var string
-     */
-    private $LayoutFile;
-
-    /**
-     *
-     * @param string $slug
-     * @return Vue
-     * @throws VueException
-     */
-    public function setLayout($slug) {
-        $fileName = self::$DossierLayout . "\\" . str_replace('.', "\\", $slug) . '.php';
-        if (!file_exists($fileName)) {
-            throw new VueException("Le layout '$slug' n'a pas été trouvé");
+    public function titre($titre = null) {
+        if (is_null($titre)) {
+            return $this->Titre;
         }
-        $this->Layout = $slug;
-        $this->LayoutFile = $fileName;
-
+        $this->Titre = $titre;
         return $this;
     }
 
-    /**
-     * retourne le slug du layout
-     * @return string
-     */
-    public function getLayout() {
-        return $this->Layout;
-    }
-
-    /**
-     * retourne le fichier du layout
-     * @return string
-     */
-    public function getLayoutFile() {
-        return $this->LayoutFile;
+    public function renderTitre() {
+        return $this->Titre;
     }
 
 }

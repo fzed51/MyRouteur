@@ -21,8 +21,8 @@ if (!function_exists('include_if_exist')) {
 
 if (!function_exists('concatPath')) {
 
-    function concatPath($basePath, $childPath) {
-        $path = $basePath . DS . $childPath;
+    function concatPath($debut, $fin, $separator = '/') {
+        $path = preg_replace("/[\\/\\\\]+(?:.[\\/\\\\]+)*/", $separator, $debut . $separator . $fin);
         return $path;
     }
 
