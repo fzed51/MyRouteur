@@ -27,11 +27,11 @@
 namespace App\Vue;
 
 /**
- * Description of AbstractVue
+ * Description of TraitVueLayout
  *
- * @author Sandrine
+ * @author fabien.sanchez
  */
-class TraitRenderFile {
+class TraitVueLayout {
 
     /**
      * Nom du layout par defaut
