@@ -41,6 +41,8 @@ interface VueInterface {
 
     public function __get($field);
 
+    public function get($field, $default);
+
     public function __isset($field);
 
     public function __unset($field);
