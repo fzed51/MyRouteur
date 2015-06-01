@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class TraitVueLayout {
+trait TraitVueLayout {
 
     /**
      * Nom du layout par defaut
