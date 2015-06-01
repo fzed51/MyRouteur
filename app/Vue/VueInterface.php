@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author Fabien Sanchez
  */
-class VueInterface {
+interface VueInterface {
 
     public function setLayout($templateSlug);
 
