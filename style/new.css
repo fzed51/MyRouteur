@@ -1,9 +1,4 @@
 /*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/*
     Created on : 29 mai 2015, 23:11:20
     Author     : Fabien.Sanchez
 */
@@ -15,9 +10,24 @@ and open the template in the editor.
     padding: 1em;
 }
 
-.news .new {
-    max-height: 100px;
+.news .new p{
+    white-space: nowrap;
+    font-size: 15px;
+    line-height: 15px;
+    height: 15px;
     overflow: hidden;
+    hyphens: auto;
+    text-overflow:ellipsis;
     padding: 1em;
     border-bottom: 1px solid #CCC;
+}
+
+.news a {
+    text-decoration: inherit;
+    color: inherit;
+    background: inherit;
+}
+
+.news a:hover{
+    text-shadow: 0 0 4px #fff
 }

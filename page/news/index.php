@@ -2,9 +2,8 @@
 <div class="news">
     <?php foreach ($news as $new): ?>
         <div class="new">
-            <h2><?= $new->titre; ?></h2>
+            <h2><a href="<?= Routeur::getUrl('News.Read', ['id' => $new->id]); ?>"><?= $new->titre; ?></a></h2>
             <p><?= $new->text; ?></p>
-            <hr>
         </div>
     <?php endforeach; ?>
     <a href="<?= Routeur::getUrl('News.Create'); ?>">+</a>

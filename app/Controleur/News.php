@@ -29,14 +29,14 @@ class News extends Controleur {
     function get_Read($id) {
         $new = \Db::getIdTable('NEWS', $id);
         $vue = new \Vue('news.read');
-        $vue->addData('news', $new);
+        $vue->setData('new', $new);
         echo $vue->render();
     }
 
     function get_Update($id) {
         $new = \Db::getIdTable('NEWS', $id);
         $vue = new \Vue('news.edit');
-        $vue->addData('news', $new);
+        $vue->setData('new', $new);
         echo $vue->render();
     }
 

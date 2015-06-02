@@ -32,15 +32,15 @@ namespace App\Vue;
  */
 interface VueHtmlElementInterface {
 
-    public function addMeta($param);
+    public function addMeta($name, $content);
 
-    public function addMetaHttp($param);
+    public function addMetaHttp($name, $content);
 
-    public function addStyle($param);
+    public function addStyle($style);
 
-    public function addFileStyle($param);
+    public function addFileStyle($fileName);
 
-    public function addScript($param);
+    public function addScript($script);
 
-    public function addFileScript($param);
+    public function addFileScript($fileName);
 }
