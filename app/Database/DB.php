@@ -52,12 +52,12 @@ class Db {
     public static function getIdTable($tableName, $id) {
         $cnx = static::getInstance();
         $stmt = $cnx->prepare("SELECT * FROM $tableName WHERE `id` = ?");
-        $stmt->execut($id);
-        $repons = $stmt->fetchAll(\PDO::FETCH_CLASS);
+        $stmt->execute([$id]);
+        $reponse = $stmt->fetchAll(\PDO::FETCH_CLASS);
         if ($reponse === false) {
             return [];
         } else {
-            return $reponse;
+            return $reponse[0];
         }
     }
 
