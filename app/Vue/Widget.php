@@ -34,7 +34,7 @@ namespace App\Vue;
 class Widget implements VueGenericInterface {
 
     public function render(array $data = null) {
-        
+
     }
 
 }
