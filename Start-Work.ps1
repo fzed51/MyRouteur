@@ -5,9 +5,8 @@ if ($LASTEXITCODE -ne 1){
     Write-Host $("ssh-add.exe " + $(resolve-path "~/.ssh/github_rsa"))
 	ssh-add.exe $(resolve-path "~/.ssh/github_rsa")
 }
-$composer = "composer"
-if (@(Get-Command composer -ErrorAction SilentlyContinue).count -eq 0){
-	$composer = "./composer"
+
+if (@(Get-Command composer* -ErrorAction SilentlyContinue).count -eq 0){
 	if (-not $(test-path ./composer.bat)){
 	"@echo Off
 	php ./composer/composer.phar %*
@@ -21,8 +20,8 @@ if (@(Get-Command composer -ErrorAction SilentlyContinue).count -eq 0){
 	}
 	New-Alias -Name composer -Value $((Resolve-Path './composer.bat').Path)
 }
-.\Clear-Project.ps1
 
+.\Clear-Project.ps1
 git pull
 composer selfupdate
 composer update
