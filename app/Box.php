@@ -27,6 +27,8 @@
 namespace App;
 
 use Exception;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Description of Box
@@ -35,14 +37,38 @@ use Exception;
  */
 class Box {
 
+    /**
+     * tableau de resolveur
+     * @var array
+     */
     private $constructeur = array();
+
+    /**
+     * instance retourné par les resolveurs
+     * @var array
+     */
     private $instances = array();
+
+    /**
+     * tableau de resolveur de generateur
+     * @var array
+     */
     private $generateur = array();
 
+    /**
+     * Ajoute un resolveur
+     * @param string $nom
+     * @param \callable $constructeur
+     */
     public function set($nom, \callable $constructeur) {
         $this->constructeur[$nom] = $constructeur;
     }
 
+    /**
+     * Ajoute un resolveur de generateur
+     * @param string $nom
+     * @param \callable $generateur
+     */
     public function setFactory($nom, \callable $generateur) {
         $this->generateur[$nom] = $generateur;
     }
@@ -50,12 +76,12 @@ class Box {
     /**
      *
      * @param string $nom
-     * @return mix_object
+     * @return mixed
      * @throws Exception
      */
     public function get($nom) {
         /**
-         * @var mix_object
+         * @var mixed
          */
         $instance = null;
         if ($this->isConstructeur($nom)) {
@@ -70,10 +96,20 @@ class Box {
         return $instance;
     }
 
+    /**
+     *
+     * @param string $nom
+     * @return bool
+     */
     private function isConstructeur($nom) {
         return isset($this->constructeur[$nom]);
     }
 
+    /**
+     *
+     * @param string $nom
+     * @return mixed
+     */
     private function getConstructeur($nom) {
         if (!isset($this->instances[$nom])) {
             $this->instances[$nom] = call_user_func($this->constructeur[nom]);
@@ -81,25 +117,80 @@ class Box {
         return $this->instances[$nom];
     }
 
+    /**
+     *
+     * @param string $nom
+     * @return bool
+     */
     private function isGenerateur($nom) {
         return isset($this->generateur[$nom]);
     }
 
+    /**
+     *
+     * @param string $nom
+     * @return mixed
+     */
     private function getGenerateur($nom) {
         return call_user_func($this->generateur[$nom]);
     }
 
+    /**
+     *
+     * @param string $nom
+     * @return bool
+     */
     private function isClasse($nom) {
         return class_exists($nom, true);
     }
 
+    /**
+     *
+     * @param string $nom
+     * @return mixed
+     * @throws Exception
+     */
     private function getAutoClasse($nom) {
-        $refClasse = new \ReflectionClass($nom);
+        $refClasse = new ReflectionClass($nom);
         if ($refClasse->isInstantiable()) {
-
+            $refConstructor = $refClasse->getConstructor();
+            if ((!is_null($refConstructor)) && ($refConstructor->getNumberOfRequiredParameters() > 0)) {
+                $params = $this->getAutoParams($refConstructor);
+                return $refClasse->newInstanceArgs($params);
+            } else {
+                return $refClasse->newInstance();
+            }
         } else {
-            throw new Exception('Impossible de résoudre ' . $nom);
+            throw new Exception('Impossible de résoudre ' . $nom . ', ce n\'est pas une classe instanciable.');
         }
+    }
+
+    /**
+     *
+     * @param ReflectionMethod $refMethod
+     * @return array
+     * @throws Exception
+     */
+    private function getAutoParams(ReflectionMethod $refMethod) {
+        $params = array();
+        $refParams = $refMethod->getParameters();
+        foreach ($refParams as $refParam) {
+            $refClassParam = $refParam->getClass();
+            if (!is_null($refClassParam)) {
+                $classeName = $refClassParam->getName();
+                try {
+                    $params[] = $this->get($classeName);
+                } catch (Exception $exc) {
+                    //echo $exc->getTraceAsString();
+                    throw new Exception('Impossible de résoudre les paramètre de ' . $refMethod->getDeclaringClass()->getName() . '->' . $refMethod->getName(), 0, $exc);
+                }
+            } else if ($refParam->isDefaultValueAvailable()) {
+                $params[] = $refParam->getDefaultValue();
+            } else {
+                throw new Exception('Impossible de résoudre les paramètre de ' . $refMethod->getDeclaringClass()->getName() . '->' . $refMethod->getName());
+            }
+        }
+        return $params;
     }
 
 }
