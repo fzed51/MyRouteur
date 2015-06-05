@@ -22,6 +22,8 @@ if (@(Get-Command composer* -ErrorAction SilentlyContinue).count -eq 0){
 }
 
 .\Clear-Project.ps1
+git stash
 git pull
+git stash pop
 composer selfupdate
 composer update
