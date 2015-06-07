@@ -27,3 +27,15 @@ if (!function_exists('concatPath')) {
     }
 
 }
+
+if (!function_exists('string2Html')) {
+
+    function string2Html($string) {
+        $string_array = explode(PHP_EOL, $string);
+        foreach ($string_array as $key => $value) {
+            $string_array[$key] = htmlentities($value, ENT_QUOTES, 'UTF-8');
+        }
+        return implode('<br>' . PHP_EOL, $string_array);
+    }
+
+}
