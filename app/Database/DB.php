@@ -82,7 +82,7 @@ class Db {
         $stmt->execute($values);
     }
 
-    public static function updateTable($table, $id, array $datas) {
+    public static function updateTable($tableName, $id, array $datas) {
         $cnx = static::getInstance();
         $fields = [];
         $values = [];
@@ -94,8 +94,8 @@ class Db {
             array_push($values, $v);
         }
 
-        $stmt = $cnx->prepare("UPDATE $tableName SET " . implode(',', $f) . " WHERE `id` = $id");
-        $stmt->execut($values);
+        $stmt = $cnx->prepare("UPDATE $tableName SET " . implode(',', $fields) . " WHERE `id` = $id");
+        $stmt->execute($values);
     }
 
     public function deleteIdTable($table, $id) {
