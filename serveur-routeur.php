@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Sandrine.
+ * Copyright 2015 Fabien.Sanchez.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
  */
 
 if (php_sapi_name() == 'cli-server') {
-    $fullNamePublic = $_SERVER["DOCUMENT_ROOT"] . "/public" . $_SERVER["REQUEST_URI"];
+    $fullNamePublic = $_SERVER["DOCUMENT_ROOT"] . $_SERVER["REQUEST_URI"];
     if (is_file($fullNamePublic)) {
         $path = pathinfo($fullNamePublic);
         switch ($path["extension"]) {
