@@ -25,4 +25,8 @@ $requete = new Requete();
 
 include_if_exist('./app/route.php');
 
-Routeur::reparti($requete->client['METHODE'], $requete->client['URI']);
+try {
+    Routeur::reparti($requete->client['METHODE'], $requete->client['URI']);
+} catch (\App\Routeur\RouteNotFoundException $e) {
+    header("HTTP/1.0 404 Not Found");
+}
