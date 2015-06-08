@@ -52,7 +52,7 @@ class Csrf {
         }
     }
 
-    public function getTockken() {
+    public function getToken() {
         return $this->jeton;
     }
 
@@ -70,7 +70,14 @@ class Csrf {
         }
         if ($redirect) {
             if ($this->jeton !== $csrfTest) {
-                throw new InvalidCsrfTockenException();
+                $pile_d_appel = debug_backtrace();
+                $appel = $pile_d_appel[1];
+                $appelStr = '';
+                if (isset($appel['class'])) {
+                    $appelStr .= $appel['class'] . $appel['type'];
+                }
+                $appelStr .= $appel['function'];
+                throw new InvalidCsrfTockenException("Le jeton de sécurité n\'est pas valide dans {$appelStr}");
             }
         } else {
             return ($this->jeton === $csrfTest);
