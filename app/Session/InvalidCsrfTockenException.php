@@ -26,11 +26,13 @@
 
 namespace App\Session;
 
+use Exception;
+
 /**
  * Description of InvalidCsrfTockenException
  *
  * @author fabien.sanchez
  */
-class InvalidCsrfTockenException extends \Exception {
+class InvalidCsrfTockenException extends Exception {
 
 }
