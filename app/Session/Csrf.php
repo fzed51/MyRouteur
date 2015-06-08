@@ -52,6 +52,10 @@ class Csrf {
         }
     }
 
+    public function getTockken() {
+        return $this->jeton;
+    }
+
     public function getAttrb() {
         return 'csrf=' . $this->jeton;
     }
@@ -68,6 +72,8 @@ class Csrf {
             if ($this->jeton !== $csrfTest) {
                 throw new InvalidCsrfTockenException();
             }
+        } else {
+            return ($this->jeton === $csrfTest);
         }
     }
 
