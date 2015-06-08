@@ -78,14 +78,17 @@ class Route {
     /**
      *
      * @param array $parametres
-     * @return string 
+     * @return string
      */
     public function getUrl(array $parametres = array()) {
         $url = $this->Path;
         if (!empty($parametres)) {
             foreach ($parametres as $parametre => $value) {
+                $oldUrl = $url;
                 $url = str_replace('{' . $parametre . '}', $value, $url);
-                unset($parametres[$parametre]);
+                if (strcmp($oldUrl, $url) != 0) {
+                    unset($parametres[$parametre]);
+                }
             }
         }
         if (!empty($parametres)) {
