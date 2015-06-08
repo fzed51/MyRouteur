@@ -98,10 +98,10 @@ class Db {
         $stmt->execute($values);
     }
 
-    public function deleteIdTable($table, $id) {
+    public static function deleteIdTable($tableName, $id) {
         $cnx = static::getInstance();
         $stmt = $cnx->prepare("DELETE FROM $tableName WHERE `id` = ?");
-        $stmt->execut($id);
+        $stmt->execute([$id]);
     }
 
 }
