@@ -17,7 +17,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
     /**
      * @var array
      */
-    private $items;
+    protected $items;
 
     /**
      * @param array $items
@@ -112,7 +112,15 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     private static function hasKey(array $indexes, $items) {
         $key = array_shift($indexes);
-        return array_key_exists($key, $items) && self::hasKey($indexes, $items[$key]);
+        if (array_key_exists($key, $items)) {
+            if (empty($indexes)) {
+                return true;
+            } else {
+                return self::hasKey($indexes, $items[$key]);
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
