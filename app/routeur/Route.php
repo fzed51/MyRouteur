@@ -75,11 +75,27 @@ class Route {
         $this->generateValidation();
     }
 
-    public function getUrl($parametres = array()) {
+    /**
+     *
+     * @param array $parametres
+     * @return string 
+     */
+    public function getUrl(array $parametres = array()) {
         $url = $this->Path;
-        if (!is_null($parametres)) {
+        if (!empty($parametres)) {
             foreach ($parametres as $parametre => $value) {
                 $url = str_replace('{' . $parametre . '}', $value, $url);
+                unset($parametres[$parametre]);
+            }
+        }
+        if (!empty($parametres)) {
+            $url .= '?';
+            $start = true;
+            foreach ($parametres as $parametre => $value) {
+                if (!$start) {
+                    $url.='&';
+                }
+                $url .= urlencode($parametre) . '=' . urlencode($value);
             }
         }
         return $url;
@@ -112,7 +128,7 @@ class Route {
      * @return Route
      */
     public function setValidation($param, $validation) {
-        // supprime les parentaises pour eviter les captures innattendus
+// supprime les parentaises pour eviter les captures innattendus
         $validation = \preg_replace('`\((?=[^?][^:])`', '(?:', $validation);
         $this->Validations[$param] = $validation;
         return $this;
