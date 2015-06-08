@@ -82,7 +82,7 @@ class Db {
         $stmt->execute($values);
     }
 
-    public static function updateTable($tableName, $id, array $datas) {
+    public static function updateIdTable($tableName, $id, array $datas) {
         $cnx = static::getInstance();
         $fields = [];
         $values = [];
