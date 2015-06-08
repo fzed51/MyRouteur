@@ -38,6 +38,11 @@ class Session extends \App\Collection {
         parent::__construct($_SESSION);
     }
 
+    public function __destruct() {
+        $_SESSION = $this->items;
+        session_commit();
+    }
+
     private function start() {
         if ($this->status() !== PHP_SESSION_ACTIVE) {
             $file = '';
