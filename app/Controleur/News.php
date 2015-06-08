@@ -22,6 +22,8 @@ class News extends Controleur {
     }
 
     function post_Create() {
+        $csrf = new \App\Session\Csrf(new \App\Session\Session());
+        $csrf->check();
         \DB::insertInTable('NEWS', \Requete::input('data'));
         $this->index();
     }
@@ -41,15 +43,17 @@ class News extends Controleur {
     }
 
     function post_Update($id) {
-        \DB::updateTable('NEWS', $id, \Requete::input('data'));
+        $csrf = new \App\Session\Csrf(new \App\Session\Session());
+        $csrf->check();
+        \DB::updateIdTable('NEWS', $id, \Requete::input('data'));
         $this->index();
     }
 
-    function post_delete() {
-        $data = \Requete::input('data');
-        if (isset($data['id'])) {
-            $id = $data['id'];
-        }
+    function get_delete($id) {
+        $csrf = new \App\Session\Csrf(new \App\Session\Session());
+        $csrf->check();
+        \DB::deleteIdTable('NEWS', $id);
+        $this->index();
     }
 
 }
