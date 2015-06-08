@@ -24,16 +24,13 @@
  * THE SOFTWARE.
  */
 
-$config_alias = array(
-    'Requete' => 'App\IO\Requete',
-    'Routeur' => 'App\Routeur\Routeur',
-    'Db' => 'App\Database\Db',
-    'Session' => 'App\Session\Session',
-    'Csrf' => 'App\Session\Csrf',
-    'Flash' => 'App\Session\Flash',
-    'Vue' => 'App\Vue\Vue',
-);
+namespace App\Session;
 
-foreach ($config_alias as $alias => $classe) {
-    class_alias($classe, $alias);
+/**
+ * Description of InvalidCsrfTockenException
+ *
+ * @author fabien.sanchez
+ */
+class InvalidCsrfTockenException extends \Exception {
+
 }

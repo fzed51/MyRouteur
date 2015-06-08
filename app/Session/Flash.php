@@ -24,16 +24,39 @@
  * THE SOFTWARE.
  */
 
-$config_alias = array(
-    'Requete' => 'App\IO\Requete',
-    'Routeur' => 'App\Routeur\Routeur',
-    'Db' => 'App\Database\Db',
-    'Session' => 'App\Session\Session',
-    'Csrf' => 'App\Session\Csrf',
-    'Flash' => 'App\Session\Flash',
-    'Vue' => 'App\Vue\Vue',
-);
+namespace App\Session;
 
-foreach ($config_alias as $alias => $classe) {
-    class_alias($classe, $alias);
+/**
+ * Description of Flash
+ *
+ * @author fabien.sanchez
+ */
+class Flash {
+
+    const IDSESSION = "__WIDGET__FLASH__";
+
+    protected $flash_type = [
+        'info' => 0,
+        'warning' => 1,
+        'error' => 2
+    ];
+
+    /**
+     * @var \Session
+     */
+    private $session;
+
+    public function __construct(\Session $session) {
+        $this->session = $session;
+    }
+
+    public function set($type, $message) {
+
+    }
+
+    public function __call($name, $arguments) {
+        array_unshift($arguments, $name);
+        call_user_method_array('set', $this, $arguments);
+    }
+
 }

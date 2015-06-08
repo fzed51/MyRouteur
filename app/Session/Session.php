@@ -24,16 +24,33 @@
  * THE SOFTWARE.
  */
 
-$config_alias = array(
-    'Requete' => 'App\IO\Requete',
-    'Routeur' => 'App\Routeur\Routeur',
-    'Db' => 'App\Database\Db',
-    'Session' => 'App\Session\Session',
-    'Csrf' => 'App\Session\Csrf',
-    'Flash' => 'App\Session\Flash',
-    'Vue' => 'App\Vue\Vue',
-);
+namespace App\Session;
 
-foreach ($config_alias as $alias => $classe) {
-    class_alias($classe, $alias);
+/**
+ * Description of Session
+ *
+ * @author fabien.sanchez
+ */
+class Session extends \App\Collection {
+
+    public function __construct() {
+        $this->start();
+        parent::__construct($_SESSION);
+    }
+
+    private function start() {
+        if ($this->status() !== PHP_SESSION_ACTIVE) {
+            $file = '';
+            $line = '';
+            if (headers_sent($file, $line)) {
+                throw new \SessionStartException("Impossible de démarrer une ssesion.\nHeader envoyer dans <$file>, ligne <$line>");
+            }
+            session_start();
+        }
+    }
+
+    public function status() {
+        return session_status();
+    }
+
 }
