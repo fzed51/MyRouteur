@@ -58,18 +58,18 @@ class Box {
     /**
      * Ajoute un resolveur
      * @param string $nom
-     * @param \callable $constructeur
+     * @param Callable $constructeur
      */
-    public function set($nom, \callable $constructeur) {
+    public function set($nom, Callable $constructeur) {
         $this->constructeur[$nom] = $constructeur;
     }
 
     /**
      * Ajoute un resolveur de generateur
      * @param string $nom
-     * @param \callable $generateur
+     * @param Callable $generateur
      */
-    public function setFactory($nom, \callable $generateur) {
+    public function setFactory($nom, Callable $generateur) {
         $this->generateur[$nom] = $generateur;
     }
 
