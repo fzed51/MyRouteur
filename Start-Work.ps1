@@ -1,4 +1,4 @@
-Write-Host $("ssh.exe -t git@github.com")
+﻿Write-Host $("ssh.exe -t git@github.com")
 ssh.exe -T git@github.com
 
 if ($LASTEXITCODE -ne 1){
@@ -22,8 +22,15 @@ if (@(Get-Command composer* -ErrorAction SilentlyContinue).count -eq 0){
 }
 
 .\Clear-Project.ps1
-git stash
+$status = $( git status --porcelain )
+if( $status ){
+	Write-Host "Dossier de travail modifié" -f white
+	git stash
+}
 git pull
-git stash pop
+if( $status ){
+	Write-Host "Restoration du dossier de travail" -f white
+	git stash pop
+}
 composer selfupdate
 composer update
