@@ -30,7 +30,11 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-interface IsRenderable {
+interface UseStyleHtml {
 
-    public function render(array $data = null);
+    public function addStyle($style);
+
+    public function addFileStyle($fileName);
+
+    public function renderStyle();
 }

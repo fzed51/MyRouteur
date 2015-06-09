@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Sandrine.
+ * Copyright 2015 fabien.sanchez.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,12 @@
 namespace App\Vue;
 
 /**
- * Description of Widget
  *
- * @author Sandrine
+ * @author fabien.sanchez
  */
-class Widget implements VueGenericInterface {
+interface UseTitreHtml {
 
-    public function render(array $data = null) {
+    public function titre($titre = null);
 
-    }
-
+    public function renderTitre();
 }

@@ -27,12 +27,23 @@
 namespace App\Vue;
 
 /**
+ * Description of VueInterface
  *
- * @author Sandrine
+ * @author Fabien Sanchez
  */
-interface VueLayoutInterface {
+interface IsContainer {
 
-    public function setLayout($templateSlug);
+    public function __set($field, $value);
 
-    public function getLayout();
+    public function __get($field);
+
+    public function get($field, $default);
+
+    public function __isset($field);
+
+    public function __unset($field);
+
+    public function setData($field, $value);
+
+    public function setDatas(array $datas);
 }

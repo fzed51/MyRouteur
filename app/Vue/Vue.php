@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class Vue implements VueGenericInterface, VueInterface, VueLayoutInterface, VueHtmlElementInterface {
+class Vue implements UseMetaHtml, UseTitreHtml, UseScriptHtml, UseStyleHtml, UseWidget, UseLayout, UseModel, IsContainer, IsRenderable {
 
     use TraitVueLayout,
         TraitVueModel,
