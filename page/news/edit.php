@@ -14,6 +14,11 @@ if (isset($new)) {
 <h1>Nouvelle news?</h1>
 <a href="<?= Routeur::getUrl('News.index') ?>">&Lt;</a><br>
 <form action="<?= $action ?>" method="POST">
+    <?php
+    $csrf = new \App\Session\Csrf(new \App\Session\Session());
+    echo $csrf->getInput();
+    ?>
+
     <input type="hidden" name="_METHODE" value="POST" />
     <div>
         <label>

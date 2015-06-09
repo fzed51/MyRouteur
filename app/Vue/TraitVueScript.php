@@ -36,7 +36,7 @@ trait TraitVueScript {
 
     public function addScript($script) {
         $key = md5($script);
-        $this->Scripts[$key] = '<script type="text/javascript" >' . $script . '</style>';
+        $this->Scripts[$key] = '<script type="text/javascript" >' . $script . '</script>';
         return $this;
     }
 
@@ -46,7 +46,7 @@ trait TraitVueScript {
         $web_file = concatPath(WEBROOT . '/style', $path_file, WS);
         $sys_file = concatPath(ROOT . '/style', $path_file, DS);
         if (file_exists($sys_file)) {
-            $this->Scripts[$key] = '<script type="text/javascript" src="' . $web_file . '"></style>';
+            $this->Scripts[$key] = '<script type="text/javascript" src="' . $web_file . '"></script>';
         }
         return $this;
     }

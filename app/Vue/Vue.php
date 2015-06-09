@@ -31,7 +31,7 @@ namespace App\Vue;
  *
  * @author fabien.sanchez
  */
-class Vue implements UseMetaHtml, UseTitreHtml, UseScriptHtml, UseStyleHtml, UseWidget, UseLayout, UseModel, IsContainer, IsRenderable {
+class Vue implements IsRenderable {
 
     use TraitVueLayout,
         TraitVueModel,
@@ -128,6 +128,15 @@ class Vue implements UseMetaHtml, UseTitreHtml, UseScriptHtml, UseStyleHtml, Use
             $this->content = $this->renderFile($this->getLayoutFile(), $data);
         }
         return $this->content;
+    }
+
+    public function widget($slug, array $data = array(), $name = '') {
+        $fileName = self::$DossierModel . "\\widget\\" . str_replace('.', "\\", $slug) . '.php';
+        if (!file_exists($fileName)) {
+            throw new VueException("Le widget '$slug' n'a pas été trouvé");
+        }
+        $data['widget_name'] = $name;
+        return $this->renderFile($fileName, $data);
     }
 
 }

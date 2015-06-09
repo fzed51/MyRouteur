@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<?php
+$this->addFileStyle('bootstrap');
+$this->addFileScript('jquery-1.11.3');
+$this->addFileScript('bootstrap');
+?>
 <html>
     <head>
         <title><?= $this->titre; ?></title>

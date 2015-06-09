@@ -61,7 +61,7 @@ class Csrf {
     }
 
     public function getInput() {
-        return "<input type=\"hidden\" name=\"csrf\" value\"{$this->jeton}\" />";
+        return "<input type=\"hidden\" name=\"csrf\" value=\"{$this->jeton}\" />";
     }
 
     function check($redirect = true, $csrfTest = null) {
