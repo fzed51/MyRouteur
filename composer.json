@@ -1,5 +1,5 @@
 {
-    "name": "fzed51/myrouteur",
+    "name": "fzed51/my-routeur",
     "description": "Routeur PHP simple. Il est autonome un maximum pour eviter les dépendances.",
     "license": "MIT",
     "authors": [
