@@ -15,7 +15,7 @@ class ControleurPage extends Controleur {
 
     function about() {
         echo "<h1>A-propos de MyRoute</h1>" . PHP_EOL
-        . "<a href=\"" . Routeur::getUrl('home') . "\">Home</a>";
+        . "<a href=\"" . \Routeur::getUrl('home') . "\">Home</a>";
     }
 
 }

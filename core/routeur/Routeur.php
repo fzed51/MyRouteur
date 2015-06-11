@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace App\Routeur;
+namespace Core\Routeur;
 
 /**
  * Description of Routeur
@@ -66,7 +66,7 @@ class Routeur {
     public static function add($methodes, $path, $action, $name = null) {
         // contrôl des méthodes
         if (preg_match("`^GET|POST|PATCH|PUT|DELETE(\|GET|POST|PATCH|PUT|DELETE)*$`", $methodes) == 0) {
-            throw new \App\Routeur\RouteurException("La(es) méthode(s) '{$methodes}' n'est(ne sont) pas valide");
+            throw new RouteurException("La(es) méthode(s) '{$methodes}' n'est(ne sont) pas valide");
         }
         // création de la route
         $route = new Route($path, $action);

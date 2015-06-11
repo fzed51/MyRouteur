@@ -26,7 +26,7 @@
 
 $config_alias = array(
     'Requete' => 'App\IO\Requete',
-    'Routeur' => 'App\Routeur\Routeur',
+    'Routeur' => 'Core\Routeur\Routeur',
     'Db' => 'App\Database\Db',
     'Session' => 'App\Session\Session',
     'Csrf' => 'App\Session\Csrf',

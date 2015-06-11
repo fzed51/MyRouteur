@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace App\Routeur;
+namespace Core\Routeur;
 
 use ArrayObject;
 use Exception;

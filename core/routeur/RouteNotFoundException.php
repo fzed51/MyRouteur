@@ -24,13 +24,13 @@
  * THE SOFTWARE.
  */
 
-namespace App\Routeur;
+namespace Core\Routeur;
 
 /**
- * Description of RouteurException
+ * Description of RouteNotFoundException
  *
  * @author fabien.sanchez
  */
-class RouteurException extends \Exception {
+class RouteNotFoundException extends \Exception {
 
 }
