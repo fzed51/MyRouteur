@@ -10,10 +10,23 @@ $RECYCLE.BIN/
 *.msp
 *.lnk
 
+### NotePad++ ###
+# -------------
+nppBackup/
+
 ### NetBeans ###
 # ------------
 nbproject/
 
 ### Composer ###
 # ----------
+composer.bat
+composer/
 vendor/
+
+### Projet ###
+# ----------
+*.log
+*.log.txt
+*.cache
+*.cache.txt

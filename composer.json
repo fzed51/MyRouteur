@@ -1,5 +1,6 @@
 {
-    "name": "fzed51/my-routeur",
+    "name": "fzed51/routeur",
+	"type": "fzed51/core composent",
     "description": "Routeur PHP simple. Il est autonome un maximum pour eviter les dépendances.",
     "license": "MIT",
     "authors": [
@@ -10,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "Core\\": "core/"
         }
     },
     "require": {
