@@ -78,7 +78,7 @@ Write-Host $version -f Yellow
 $composerjson = @"
 {
     "name": "fzed51/routeur",
-	"type": "fzed51/core composent",
+	"type": "composent-fzed51-core",
     "description": "Routeur PHP simple. Il est autonome un maximum pour eviter les dépendances.",
     "license": "MIT",
     "authors": [
