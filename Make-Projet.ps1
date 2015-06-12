@@ -84,7 +84,7 @@ $composerjson = @"
     "authors": [
         {
             "name": "fabien.sanchez",
-            "email": "fzed51+packagist@gmail.com"
+            "email": "fzed51@users.noreply.github.com"
         }
     ],
     "autoload": {
