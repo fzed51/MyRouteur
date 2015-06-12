@@ -13,7 +13,7 @@ param(
 	[switch]$alpha,
 	[switch]$beta,
 	[switch]$whatif,
-	[switch]$test,
+	[switch]$test
 )
 
 $liste = @(
@@ -21,6 +21,8 @@ $liste = @(
 	".\LICENSE",
 	".\README.md",
 	".\composer.bat",
+	".\composer.json",
+	".\composer.lock",
 	".\Make-Projet.ps1",
 	".\VERSION",
 	".\composer\composer.phar",
@@ -46,17 +48,9 @@ if($major){
 	$num_version[1]=0
 	$num_version[0]++
 }
-$num_version | ConvertTo-Json | Set-Content VERSION
 $version = [string]$num_version[0] + "." + [string]$num_version[1]
 if($num_version[2] -gt 0){
 	$version += "." + [string]$num_version[2]
-}
-if($pre){
-	if(!$prefix){
-		$version += "-"
-		$prefix = $True
-	}
-	$version += "pre"
 }
 if($alpha){
 	if(!$prefix){
@@ -64,14 +58,12 @@ if($alpha){
 		$prefix = $True
 	}
 	$version += "alpha"
-} else {
-	if($beta){
-		if(!$prefix){
-			$version += "-"
-			$prefix = $True
-		}
-		$version += "beta"
+} elseif($beta){
+	if(!$prefix){
+		$version += "-"
+		$prefix = $True
 	}
+	$version += "beta"
 }
 
 Write-Host "Creation de la version " -no
@@ -110,15 +102,19 @@ ls -r -directory | ? {
 	Write-Host "Le(s) fichier(s) suivant est(sont) supprime(s) :"
 }  -Process {
 	Write-Host $_.FullName -f Cyan
-	Remove-Item $_.FullName -force
+	if ((!$whatif) -and (!$test)){
+		Remove-Item $_.FullName -force
+	}
 }
 
-if ((!$whatif) -or $test){
+if ((!$whatif) -and (!$test)){
+	$num_version | ConvertTo-Json | Set-Content VERSION
 	$composerjson | Set-Content ./composer.json
 	composer update
 	git add -A
 	git commit -m ":package: make for v$version"
 } else {
+	"`$num_version | ConvertTo-Json | Set-Content VERSION"
 	Write-Host "`$composerjson | Set-Content ./composer.json"
 	Write-Host "composer update"
 	"git add -A"
