@@ -1,4 +1,4 @@
-# MyRouteur
+# Routeur
 
 Routeur PHP sans dépendances.
 Son architecture est la plus simple possible.
