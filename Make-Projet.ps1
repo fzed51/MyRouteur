@@ -10,8 +10,10 @@ param(
 	[switch]$major,
 	[switch]$minor,
 	[switch]$release,
-	[switch]$pre,
-	[switch]$beta
+	[switch]$alpha,
+	[switch]$beta,
+	[switch]$whatif,
+	[switch]$test,
 )
 
 $liste = @(
@@ -111,11 +113,16 @@ ls -r -directory | ? {
 	Remove-Item $_.FullName -force
 }
 
-$composerjson | Set-Content ./composer.json
-
-composer update
-
-git add -A
-git commit -m ":package: make for v$version"
+if ((!$whatif) -or $test){
+	$composerjson | Set-Content ./composer.json
+	composer update
+	git add -A
+	git commit -m ":package: make for v$version"
+} else {
+	Write-Host "`$composerjson | Set-Content ./composer.json"
+	Write-Host "composer update"
+	"git add -A"
+	"git commit -m `":package: make for v$version`""
+}
 	
 #>
