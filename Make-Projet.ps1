@@ -28,8 +28,8 @@ $liste = @(
 	".\composer\composer.phar",
 	".\core\routeur\Route.php",
 	".\core\routeur\Routeur.php",
-	".\core\routeur\Route.php",
-	".\core\routeur\Route.php"
+	".\core\routeur\RouteNotFoundException.php",
+	".\core\routeur\RouteurException.php"
 )
 
 $num_version = Get-Content ./VERSION | Out-String | ConvertFrom-Json
